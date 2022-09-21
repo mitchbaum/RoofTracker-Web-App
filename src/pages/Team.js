@@ -228,7 +228,9 @@ const Team = () => {
                                   src={val.pic !== "" ? val.pic : Placeholder}
                                 ></img>
                               </td>
-                              <td data-label="Name">{val.name}</td>
+                              <td data-label="Name">
+                                {val.name !== "" ? val.name : "-"}
+                              </td>
                               <td data-label="Role">
                                 {val.access === "Inactive" ? "" : val.access}
                               </td>

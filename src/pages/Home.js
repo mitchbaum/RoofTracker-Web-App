@@ -355,7 +355,9 @@ function Home() {
                                     }
                                   ></img>
                                 </td>
-                                <td data-label="Name">{val.name}</td>
+                                <td data-label="Name">
+                                  {val.name !== "" ? val.name : "-"}
+                                </td>
                                 <td data-label="Final COC?">
                                   {val.cocSwitch ? (
                                     <div>Yes</div>
@@ -376,7 +378,7 @@ function Home() {
                                     : "N/A"}
                                 </td>
                                 <td data-label="Modified">
-                                  {getDateLabel(val.timeStamp, "")}
+                                  {getDateLabel(val.timeStamp, "-")}
                                 </td>
                                 <td data-label="Owner">{val.fileOwner}</td>
                                 <td data-label="Job Status">
