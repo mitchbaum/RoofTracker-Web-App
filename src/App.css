@@ -80,8 +80,6 @@ img {
   height: 40px;
   outline: 0;
   transition: all 0.3s;
-  -webkit-appearance: none;
-  -moz-appearance: none;
 }
 
 .input-group > textarea {
@@ -288,5 +286,9 @@ input:invalid[focused="true"] ~ .error-message {
 
   .select-flex {
     display: block;
+  }
+  .input-group > select {
+    background-color: white;
+    -webkit-appearance: none;
   }
 }
