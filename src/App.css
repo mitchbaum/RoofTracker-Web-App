@@ -1,0 +1,289 @@
+@import url("https://fonts.googleapis.com/css?family=Lato:300,400,700&display=swap");
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Lato", sans-serif;
+}
+
+.header {
+  margin: 2rem 15rem 0rem 15rem;
+  color: #1d2731;
+}
+
+.my-files {
+  margin: 2rem 15rem 0rem 15rem;
+}
+
+.header-small {
+  color: #777676;
+  font-weight: 300;
+}
+
+button:active,
+.btn-animation:active,
+.input-group > input[type="file"]::file-selector-button:active {
+  transform: scale(0.96);
+}
+
+.form {
+  margin-bottom: 2rem;
+  margin-top: 2rem;
+  padding: 30px;
+  background-color: white;
+  border-radius: 5px;
+}
+
+.input-group {
+  margin-bottom: 26px;
+}
+
+.width-80 {
+  width: 75% !important;
+}
+
+.input-group > label,
+.input-group > input,
+.input-group > textarea,
+.search,
+img {
+  text-align: left;
+  width: 100%;
+}
+.input-group > label {
+  display: inline-block;
+  margin-bottom: 0px;
+  text-transform: uppercase;
+}
+.input-group > input,
+.search {
+  border: none;
+  border-bottom: 1px solid #d30b0e;
+  color: #676767;
+  font-size: 16px;
+  height: 40px;
+  outline: 0;
+  transition: all 0.3s;
+}
+
+.input-group > .file {
+  border: none;
+  height: 50px;
+}
+.input-group > select {
+  border: none;
+  border-bottom: 1px solid #d30b0e;
+  color: #676767;
+  font-size: 16px;
+  height: 40px;
+  outline: 0;
+  transition: all 0.3s;
+}
+
+.input-group > textarea {
+  border: 1px solid #d30b0e;
+  border-radius: 5px;
+  color: #676767;
+  font-size: 16px;
+  height: 60px;
+  outline: 0;
+  resize: none;
+  transition: all 0.3s;
+  margin-top: 0.8rem;
+  padding: 5px;
+}
+
+.input-group > input::placeholder,
+.input-group > textarea::placeholder {
+  color: #c4c4c4;
+  font-size: 16px;
+}
+
+input[type="radio"]:checked,
+input[type="checkbox"]:checked {
+  background-color: #d30b0e;
+}
+input[type="radio"]:checked:after,
+input[type="checkbox"]:checked:after {
+  content: "\2713";
+  color: white;
+}
+input[type="radio"],
+input[type="checkbox"] {
+  text-align: center;
+  display: table-cell;
+  vertical-align: middle;
+  width: 20px !important;
+  height: 20px !important;
+  appearance: none;
+  border-radius: 5px;
+  border: 1px solid #d30b0e;
+  box-shadow: none;
+  font-size: 1em;
+}
+
+.input-group > input[type="file"]::file-selector-button {
+  margin: 1rem 1.5rem 0 0rem;
+  width: 50%;
+  padding: 8px 15px;
+  color: white;
+  border-radius: 5px;
+  background-color: #1d2731;
+  border-style: none;
+  border-bottom: none;
+  font-size: 12px;
+}
+
+.input-group.account-info {
+  margin: 1.5rem;
+}
+
+.input-group.account-info > input::placeholder {
+  color: #676767;
+  font-size: 16px;
+}
+
+.input-group.account-info > .not-editable-input {
+  color: #676767;
+  font-size: 16px;
+}
+
+.placeholder-color > input::placeholder,
+.placeholder-color > textarea::placeholder {
+  color: #676767;
+}
+
+.file {
+  position: relative;
+}
+
+.file > input[type="file"] {
+  position: absoulte;
+  cursor: pointer;
+  opacity: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.file > label {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  background-color: white;
+  color: #777676;
+  font-weight: 300;
+  border-radius: 5px;
+  line-height: 30px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.flex-space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.flex-space-evenly,
+.select-flex {
+  display: flex;
+  justify-content: space-evenly;
+}
+
+.filler {
+  flex-grow: 1;
+  text-align: center;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+}
+
+.start {
+  display: flex;
+  justify-content: start;
+}
+
+.end {
+  display: flex;
+  justify-content: end;
+}
+
+.align-center {
+  display: flex;
+  align-items: center;
+}
+
+.align-bottom {
+  display: flex;
+  align-items: flex-end;
+}
+
+.red-line {
+  height: 1px;
+  background-color: red;
+  margin: 1rem 0;
+}
+
+.input:invalid {
+  animation: shake 0.3s;
+}
+
+@keyframes shake {
+  25% {
+    transform: translateX(4px);
+  }
+  50% {
+    transform: translateX(-4px);
+  }
+  75% {
+    transform: translateX(4px);
+  }
+}
+
+.delete {
+  color: #d30b0e;
+  cursor: pointer;
+  height: 20px;
+}
+
+.delete:hover {
+  color: #e60000;
+}
+
+.error-message {
+  margin: 0.5rem 0 0 0;
+  color: #d30b0e;
+  display: none;
+}
+
+input:invalid[focused="true"] ~ .error-message {
+  display: block;
+}
+
+.media-hide {
+  display: none;
+}
+
+@media only screen and (max-width: 700px) {
+  .media-hide {
+    display: block;
+  }
+
+  .header {
+    margin: 2rem 1rem 0rem 1rem;
+  }
+
+  .width-80 {
+    width: 50% !important;
+  }
+
+  .select-flex {
+    display: block;
+  }
+}

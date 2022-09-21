@@ -1,0 +1,36 @@
+.team-profile-pic {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  vertical-align: middle;
+  object-fit: cover;
+}
+
+.circle {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 8px;
+}
+
+.circle.active {
+  background-color: #00c500;
+  color: #00c500;
+}
+
+.circle.inactive {
+  background-color: #d30b0e;
+  color: #d30b0e;
+}
+
+.circle-div-open {
+  color: #00c500;
+  display: flex;
+  align-items: center;
+}
+
+@media only screen and (max-width: 700px) {
+  .circle-div-open {
+    justify-content: end;
+  }
+}

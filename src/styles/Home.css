@@ -1,0 +1,58 @@
+.home-header {
+  margin-left: 6.5rem;
+}
+
+.card-container {
+  display: flex;
+  margin: 1rem 6.5rem 2rem 6.5rem;
+}
+
+.files-container {
+  width: 70%;
+}
+
+.tasks-container {
+  width: 30%;
+  margin-left: 1.5rem;
+}
+
+.card {
+  border: 0.5px lightgrey solid;
+  border-radius: 5px;
+  padding: 1rem 1.5rem;
+}
+
+.card-icon {
+  font-size: 24px;
+}
+
+.dashboard-element {
+  border: 0.5px lightgrey solid;
+  border-radius: 5px;
+  margin-top: 1rem;
+}
+
+@media only screen and (max-width: 700px) {
+  .media-hide {
+    display: block;
+  }
+
+  .home-header {
+    margin: 2rem 1rem 0rem 1rem;
+  }
+
+  .card-container {
+    display: block;
+    margin: 2rem 1rem 0rem 1rem;
+  }
+
+  .files-container {
+    width: 100%;
+  }
+
+  .tasks-container {
+    width: 100%;
+
+    margin: 2rem 0 2rem 0;
+  }
+}

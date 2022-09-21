@@ -1,0 +1,45 @@
+.status-btn {
+  margin: 0;
+  width: 175px;
+  padding: 8px 15px;
+  color: white;
+  border-radius: 5px;
+  border-style: none;
+  font-size: 12px;
+}
+
+.status-btn.deactivate {
+  background-color: #d30b0e;
+  border: none;
+}
+
+.status-btn.deactivate:hover {
+  cursor: pointer;
+  background-color: #e60000;
+  border: none;
+}
+
+.status-btn.reactivate {
+  background-color: green;
+}
+
+.status-btn.reactivate:hover {
+  cursor: pointer;
+  background-color: rgb(1, 150, 1);
+}
+
+.security-access {
+  margin: 1rem 0rem 0 0rem;
+  width: 175px;
+  padding: 8px 15px;
+  color: white;
+  border-radius: 5px;
+  background-color: #1d2731;
+  border-style: none;
+  font-size: 12px;
+}
+
+.security-access:hover {
+  cursor: pointer;
+  background-color: #3b4f63;
+}

@@ -1,0 +1,136 @@
+.top-two-card-container {
+  display: flex;
+  margin: 1rem 15rem 2rem 15rem;
+}
+
+.box {
+  border: 0.5px #d3d3d3 solid;
+  border-radius: 5px;
+  padding: 1.5rem;
+}
+
+.left {
+  width: 60%;
+}
+
+.right {
+  margin-left: 1.5rem;
+  width: 40%;
+}
+
+.summary-page-right {
+  width: 40%;
+}
+
+.FI-flex {
+  display: flex;
+}
+
+.FI-name {
+  margin: 0rem 0 0 1.5rem;
+  font-size: 18px;
+}
+
+.FI-salesrep {
+  margin: 0.5rem 0 0 1.5rem;
+  font-size: 14px;
+  font-weight: 300;
+}
+
+.show-summary-btn {
+  margin: 1rem 0 0 1.5rem;
+  width: 150px;
+}
+
+.FI-image {
+  margin: 0rem 0 0.5rem 0;
+}
+
+.FI-image-placeholder {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  vertical-align: middle;
+  object-fit: cover;
+  margin: 0rem 0 0.5rem 0;
+}
+
+.label-message-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+}
+
+.FI-message {
+  font-weight: 300;
+}
+
+.note {
+  margin: 0.5rem 0 0 0.5rem;
+}
+
+.equation-label {
+  margin-left: 1rem;
+}
+
+.equation-line {
+  width: 100px;
+  background-color: black;
+  height: 1px;
+}
+
+.edit {
+  color: #1d2731;
+  margin-right: 10px;
+}
+
+.edit:hover {
+  cursor: pointer;
+  color: #3b4f63;
+}
+
+.row-actions {
+  display: flex;
+  justify-content: end;
+  align-items: center;
+  margin: 0 10px;
+}
+
+.close-summary-container {
+  margin: 1rem 0 0 15rem;
+}
+
+@media screen and (max-width: 600px) {
+  .top-two-card-container {
+    display: block;
+    margin: 1rem 1rem 2rem 1rem;
+  }
+
+  .delete-file-media {
+    width: auto;
+  }
+  .box.left {
+    width: 100%;
+  }
+
+  .box.right {
+    display: none;
+  }
+
+  .row-actions {
+    margin: 0;
+  }
+
+  .close-summary-container {
+    margin: 1rem 0 0 1rem;
+  }
+
+  .summary-page-right {
+    width: 100%;
+  }
+  .left {
+    margin-top: 2rem;
+    width: 100%;
+  }
+}

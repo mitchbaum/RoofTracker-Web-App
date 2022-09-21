@@ -1,0 +1,206 @@
+.login-left-column {
+  width: 60%;
+}
+
+.login-right-column {
+  width: 40%;
+  background-color: #1d2731;
+}
+
+.greeting-container {
+  text-align: center;
+  position: fixed;
+  top: 50%;
+  left: 30%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+}
+
+.welcome {
+  font-size: 35px;
+  font-weight: 400;
+  color: #1d2731;
+}
+
+.signup-branding {
+  border-bottom: none;
+  position: fixed;
+}
+
+.login-label {
+  color: white;
+}
+
+.clip-art-img {
+  width: 300px;
+  height: 300px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.message {
+  font-weight: 300;
+  font-size: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 400px;
+  margin-top: 2rem;
+}
+
+.register-company {
+  font-size: 18px;
+  margin-left: 2rem;
+  color: #d30b0e;
+  position: absolute;
+  bottom: 2rem;
+}
+
+.register-company:hover,
+.forgot-pw:hover {
+  color: red;
+  cursor: pointer;
+}
+
+.top-buttons-container {
+  height: 80px;
+  display: flex;
+  justify-content: end;
+}
+
+.already-have-account-label {
+  color: white;
+  display: flex;
+  align-items: center;
+}
+
+.top-btn {
+  margin: 20px 18px;
+  width: 140px;
+  color: white;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: #1d2731;
+  border: 1px white solid;
+}
+
+.top-btn:hover {
+  border: 1px #d30b0e solid;
+  color: #d30b0e;
+  cursor: pointer;
+}
+
+.login-form-container {
+  display: block;
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 2rem;
+}
+
+.proceed-message {
+  font-weight: 300;
+  font-size: 20px;
+  color: white;
+}
+
+.login-btn {
+  margin: 1rem 0rem;
+  width: 100%;
+  padding: 16px 0px;
+  color: white;
+  border-radius: 5px;
+  border-style: none;
+  font-size: 16px;
+  background-color: #d30b0e;
+}
+
+.login-btn:hover {
+  background-color: red;
+  cursor: pointer;
+}
+
+.forgot-pw {
+  font-size: 16px;
+  color: #d30b0e;
+  text-align: left;
+}
+
+.help-and-support {
+  display: flex;
+  justify-content: start;
+  color: white;
+  stroke: white;
+}
+
+.help-and-support:hover {
+  cursor: pointer;
+}
+
+.app-store-logo {
+  margin-top: 1.5rem;
+  width: 145px;
+  margin-bottom: 2rem;
+}
+
+@media only screen and (max-width: 700px) {
+  body {
+    margin: 0px;
+  }
+  .login-left-column {
+    display: none;
+  }
+
+  .greeting-container {
+    display: none;
+  }
+
+  .login-right-column {
+    width: 100%;
+    background-color: white;
+  }
+
+  .top-btn {
+    color: #d30b0e;
+    background-color: white;
+    border: 1px #d30b0e solid;
+  }
+
+  .login-form-container {
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .media-logo {
+    height: 100px;
+    width: 100px;
+    margin-top: 5rem;
+    margin-left: 0rem;
+    margin-bottom: 1rem;
+    background: none;
+    margin-left: 26px;
+  }
+
+  .proceed-message,
+  .login-label,
+  .white-to-black {
+    color: black;
+    margin-left: 30px;
+  }
+
+  .register-company {
+    font-size: 18px;
+    margin-left: 0rem;
+    margin-top: 2rem;
+    position: inherit;
+  }
+
+  .signup-branding {
+    display: none;
+  }
+
+  .already-have-account-label {
+    display: none;
+  }
+}

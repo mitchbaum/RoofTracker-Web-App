@@ -1,0 +1,28 @@
+.template > th > .header-th {
+  width: 80px;
+  height: 15px;
+  border-radius: 20px;
+  margin-right: 8px;
+  background-color: #e0e0e0;
+  margin-left: 20px;
+}
+
+.template > th {
+  background-color: #f5f5f5;
+}
+
+.table-cells-container.template {
+  cursor: default;
+}
+.table-cells-container.template:hover {
+  background-color: white;
+}
+
+.text-filler {
+  cursor: default !important;
+  width: 100px;
+  height: 20px;
+  border: 0px !important;
+  background-color: #e0e0e0 !important;
+  border-radius: 5px;
+}

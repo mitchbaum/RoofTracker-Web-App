@@ -1,0 +1,186 @@
+.account-info-container {
+  margin: 1rem 15rem 2rem 15rem;
+  border: 0.5px lightgrey solid;
+  border-radius: 5px;
+}
+
+li {
+  list-style: none;
+}
+
+.profile-container {
+  margin: 1rem 15rem 2rem 15rem;
+  border: 0.5px lightgrey solid;
+  border-radius: 5px;
+  display: flex;
+}
+
+.profile-pic {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  vertical-align: middle;
+  object-fit: cover;
+  margin: 2.5rem 1.5rem;
+}
+
+.border {
+  border: 2px black solid;
+}
+
+.middle-column {
+  width: 100%;
+  overflow: auto;
+}
+
+.role {
+  margin: 1.5rem 0rem 0 1rem;
+  font-size: 12px;
+  border: 0.7px solid #1d2731;
+  border-radius: 5px;
+  padding: 3px 10px;
+  width: 90px;
+  color: #1d2731;
+  text-align: center;
+}
+
+.role.inactive {
+  color: #d30b0e;
+  border-color: #d30b0e;
+}
+
+.name {
+  margin: 1rem 0 0 1rem;
+  font-size: 18px;
+}
+
+.email {
+  margin: 0.5rem 0 0 1rem;
+  font-size: 12px;
+  color: darkgrey;
+}
+
+.button-container {
+  margin: 1.5rem;
+}
+
+.status-btn {
+  margin: 0;
+  width: 175px;
+  padding: 8px 15px;
+  color: white;
+  border-radius: 5px;
+  border-style: none;
+  font-size: 12px;
+}
+
+.status-btn.deactivate {
+  background-color: #d30b0e;
+  border: none;
+}
+
+.status-btn.deactivate:hover {
+  cursor: pointer;
+  background-color: #e60000;
+  border: none;
+}
+
+.status-btn.reactivate {
+  background-color: green;
+}
+
+.status-btn.reactivate:hover {
+  cursor: pointer;
+  background-color: rgb(1, 150, 1);
+}
+
+.security-access {
+  margin: 1rem 0rem 0 0rem;
+  width: 175px;
+  padding: 8px 15px;
+  color: white;
+  border-radius: 5px;
+  background-color: #1d2731;
+  border-style: none;
+  font-size: 12px;
+}
+
+.security-access:hover,
+input[type="file"]::file-selector-button:hover {
+  cursor: pointer;
+  background-color: #3b4f63;
+}
+
+.file-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 25%;
+  vertical-align: middle;
+  object-fit: cover;
+}
+
+.save-container {
+  display: flex;
+  margin-right: 15rem;
+}
+
+.save-btn {
+  margin: 1rem 0 0 0;
+  width: 75px;
+}
+
+@media screen and (max-width: 600px) {
+  .profile-container {
+    margin: 1rem 1rem 2rem 1rem;
+  }
+
+  .account-info-container {
+    margin: 1rem 1rem 2rem 1rem;
+  }
+
+  .profile-pic {
+    width: 60px;
+    height: 60px;
+    margin: 1rem 1rem;
+  }
+
+  .role {
+    margin: 1rem 0rem 0 0.5rem;
+    font-size: 12px;
+  }
+
+  .security-access {
+    margin: 1rem 0rem 0 0rem;
+    width: auto;
+    padding: 8px 15px;
+    font-size: 12px;
+  }
+
+  .button-container {
+    margin: 0 1rem 1rem 1rem;
+  }
+
+  .save-container {
+    margin-right: auto;
+  }
+  .save-btn {
+    margin: 1rem 1rem 0 0;
+    width: 100px;
+  }
+  .status-btn-media {
+    margin: 1rem 0 0 0;
+    width: auto;
+  }
+
+  .status-btn {
+    width: auto;
+  }
+
+  .email {
+    margin: 0.5rem 0 1rem 0.5rem;
+  }
+
+  .name {
+    margin: 1rem 0 0 0.5rem;
+  }
+}
