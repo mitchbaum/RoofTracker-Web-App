@@ -12,6 +12,7 @@ import { UserAuth } from "../../context/AuthContext";
 import { collection, setDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import Compressor from "compressorjs";
+import moment from "moment"; // reference how to use moment https://momentjs.com/
 
 const AddFile = ({ onAdd, open, onClose, uid }) => {
   const { user } = UserAuth();
@@ -49,14 +50,7 @@ const AddFile = ({ onAdd, open, onClose, uid }) => {
     e.preventDefault();
     setMessage("Saving...");
     setError("");
-    const getFromattedDate = new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-      second: "2-digit",
-    }).format(Date.now());
+    const getFromattedDate = moment().format("LL");
     //  submit and add file
     addFile({
       imageData: "",

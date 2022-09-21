@@ -7,6 +7,7 @@ import { UserAuth } from "../context/AuthContext";
 import { db } from "../firebase";
 import { doc, onSnapshot, collection, getDocs } from "firebase/firestore";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
+import PleaseLogin from "../components/error-pages/PleaseLogin";
 
 const MyFiles = () => {
   const { user } = UserAuth();
@@ -82,9 +83,17 @@ const MyFiles = () => {
     }
   };
 
+  const getDateLabel = (data, placeholder) => {
+    if (data !== "") {
+      return moment(data, "MMMM Do YYYY, h:mm:ss a").format("LL");
+    } else {
+      return placeholder;
+    }
+  };
+
   return (
     <>
-      {user && access !== "Inactive" && (
+      {user && access !== "Inactive" ? (
         <>
           {showAddFile && (
             <AddFile
@@ -203,10 +212,7 @@ const MyFiles = () => {
                             </td>
 
                             <td data-label="Modified">
-                              {val.timeStamp.substring(
-                                0,
-                                val.timeStamp.indexOf("at")
-                              )}
+                              {getDateLabel(val.timeStamp, "-")}
                             </td>
                           </tr>
                         </tbody>
@@ -222,6 +228,8 @@ const MyFiles = () => {
             {isPending && <TableTemp />}
           </div>
         </>
+      ) : (
+        <PleaseLogin />
       )}
       {user && access === "Inactive" && (
         <>

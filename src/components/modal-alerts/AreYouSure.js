@@ -5,6 +5,7 @@ import "../modal/Modal.css";
 import { updateDoc, doc, deleteDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import { getStorage, ref, deleteObject } from "firebase/storage";
+import moment from "moment"; // reference how to use moment https://momentjs.com/
 
 const AreYouSure = ({ fileData, open, onClose, action, uid, itemData }) => {
   if (!open) return null;
@@ -12,6 +13,7 @@ const AreYouSure = ({ fileData, open, onClose, action, uid, itemData }) => {
   const storage = getStorage();
 
   const handleSubmit = async () => {
+    const getFromattedDate = moment().format("LL");
     if (action == "Deactivate Account") {
       updateDoc(doc(db, "Users", uid), {
         access: "Inactive",
@@ -112,6 +114,9 @@ const AreYouSure = ({ fileData, open, onClose, action, uid, itemData }) => {
           console.log(error);
         });
     }
+    updateDoc(doc(db, `Users/${uid}/Files/${fileData.id}`), {
+      timeStamp: getFromattedDate,
+    });
 
     return;
   };

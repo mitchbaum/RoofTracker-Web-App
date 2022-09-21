@@ -13,6 +13,7 @@ import AccountDetailsTemp from "../components/isPending-templates/AccountDetails
 import { useNavigate } from "react-router-dom";
 import AddFile from "../components/modal-alerts/AddFile";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
+import PleaseLogin from "../components/error-pages/PleaseLogin";
 
 const UserDetails = () => {
   const { uid } = useParams();
@@ -97,6 +98,14 @@ const UserDetails = () => {
         style: "currency",
         currency: "USD",
       }).format(data * 1);
+    }
+  };
+
+  const getDateLabel = (data, placeholder) => {
+    if (data !== "") {
+      return moment(data, "MMMM Do YYYY, h:mm:ss a").format("LL");
+    } else {
+      return placeholder;
     }
   };
 
@@ -346,7 +355,7 @@ const UserDetails = () => {
                                 ></img>
                               </td>
                               <td data-label="Name" className="name-data">
-                                {val.name}
+                                {val.name !== "" ? val.name : "-"}
                               </td>
                               <td data-label="Insurance Still Owes HO">
                                 {val.coc !== "" && val.deductible !== ""
@@ -375,10 +384,7 @@ const UserDetails = () => {
                                 )}
                               </td>
                               <td data-label="Modified">
-                                {val.timeStamp.substring(
-                                  0,
-                                  val.timeStamp.indexOf("at")
-                                )}
+                                {getDateLabel(val.timeStamp, "-")}
                               </td>
                             </tr>
                           </tbody>
@@ -388,7 +394,9 @@ const UserDetails = () => {
               </div>
             </>
           ) : (
-            <></>
+            <>
+              <PleaseLogin />
+            </>
           )}
 
           <div className="header">

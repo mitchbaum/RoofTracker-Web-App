@@ -6,7 +6,7 @@ import { dropIn } from "../modal/DropIn";
 import "../modal/Modal.css";
 import { collection, setDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
-import { UserAuth } from "../../context/AuthContext";
+import moment from "moment"; // reference how to use moment https://momentjs.com/
 
 const AddACV = ({ open, onClose, modify, uid, fileId, itemData }) => {
   const [name, setName] = useState(itemData.itemName ?? "");
@@ -25,14 +25,7 @@ const AddACV = ({ open, onClose, modify, uid, fileId, itemData }) => {
     // preventDefault means the form wont submit to a page
     e.preventDefault();
 
-    const getFromattedDate = new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-      second: "2-digit",
-    }).format(Date.now());
+    const getFromattedDate = moment().format("LL");
 
     if (
       name === itemData.itemName &&

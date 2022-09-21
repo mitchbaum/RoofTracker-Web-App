@@ -21,6 +21,7 @@ import {
 } from "firebase/firestore";
 import { storage } from "../../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import moment from "moment"; // reference how to use moment https://momentjs.com/
 
 const EditFile = ({ open, onClose, data, fileId, uid }) => {
   const { user } = UserAuth();
@@ -57,14 +58,7 @@ const EditFile = ({ open, onClose, data, fileId, uid }) => {
     // preventDefault means the form wont submit to a page
     e.preventDefault();
     setMessage("Saving...");
-    const getFromattedDate = new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-      second: "2-digit",
-    }).format(Date.now());
+    const getFromattedDate = moment().format("LL");
 
     if (imageData !== data.imageData && imageData !== "") {
       uploadImage(fileId);

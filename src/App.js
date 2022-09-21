@@ -15,12 +15,12 @@ import RegisterCompany from "./pages/sign in/RegisterCompany";
 import ForgotPassword from "./pages/sign in/ForgotPassword";
 import MyFiles from "./pages/MyFiles";
 import FileInformation from "./pages/FileInformation";
-import PageNotFound from "./pages/PageNotFound";
+import PageNotFound from "./components/error-pages/PageNotFound";
 import { useEffect } from "react";
 import { AuthContextProvider } from "./context/AuthContext";
 import Navbar from "./components/navbar/Navbar";
 import ProtectedRoute from "./components/ProtectedRoute";
-import NoAccess from "./pages/NoAccess";
+import NoAccess from "./components/error-pages/NoAccess";
 
 function ScrollToTop() {
   const { pathname } = useLocation();

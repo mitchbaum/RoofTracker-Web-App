@@ -22,6 +22,7 @@ import {
 import AreYouSure from "../components/modal-alerts/AreYouSure";
 import { useNavigate } from "react-router-dom";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
+import PleaseLogin from "../components/error-pages/PleaseLogin";
 
 const FileInformation = () => {
   const { uid, fileId } = useParams();
@@ -157,7 +158,7 @@ const FileInformation = () => {
 
   return (
     <>
-      {user && (
+      {user ? (
         <>
           {showEdit && (
             <EditFile
@@ -233,7 +234,9 @@ const FileInformation = () => {
                 style={{ marginTop: "1rem" }}
               >
                 <div className="box summary-page-right">
-                  <h1 className="header-large">{fileData.name}</h1>
+                  <h1 className="header-large">
+                    {fileData.name !== "" ? fileData.name : "-"}
+                  </h1>
                   <div style={{ marginTop: "1rem" }}>
                     <p>Insurance Still Owes Homeowner:</p>
                     <p className="FI-message note">
@@ -462,7 +465,9 @@ const FileInformation = () => {
                       ></img>
                     </div>
                     <div className="right-column">
-                      <p className="FI-name">{fileData.name}</p>
+                      <p className="FI-name">
+                        {fileData.name !== "" ? fileData.name : "-"}
+                      </p>
                       <p className="FI-salesrep">Sales Rep: {salesRep}</p>
 
                       <button
@@ -976,6 +981,8 @@ const FileInformation = () => {
             </>
           )}
         </>
+      ) : (
+        <PleaseLogin />
       )}
     </>
   );

@@ -18,6 +18,7 @@ import Placeholder from "../logo/account-icon.png";
 import EditProfilePic from "../components/modal-alerts/EditProfilePic";
 import uuid from "react-native-uuid";
 import AccountDetailsTemp from "../components/isPending-templates/AccountDetailsTemp";
+import PleaseLogin from "../components/error-pages/PleaseLogin";
 
 const Settings = () => {
   const { user, resetPassword } = UserAuth();
@@ -208,7 +209,7 @@ const Settings = () => {
 
   return (
     <>
-      {user && access !== "Inactive" && (
+      {user && access !== "Inactive" ? (
         <>
           {showChangePic && (
             <EditProfilePic
@@ -516,6 +517,8 @@ const Settings = () => {
             </>
           )}
         </>
+      ) : (
+        <PleaseLogin />
       )}
       {user && access === "Inactive" && (
         <>

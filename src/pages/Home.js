@@ -27,6 +27,7 @@ import { UserAuth } from "../context/AuthContext";
 import { db } from "../firebase";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
 import Login from "./sign in/Login";
+import PleaseLogin from "../components/error-pages/PleaseLogin";
 
 function Home() {
   const { user } = UserAuth();
@@ -186,9 +187,7 @@ function Home() {
   };
 
   const getDateLabel = (data, placeholder) => {
-    if (data.length == 4) {
-      return moment(data, "MMDDYYYY").format("ll");
-    } else if (data.length == 8) {
+    if (data.length == 4 || data.length == 8) {
       return moment(data, "MMDDYYYY").format("ll");
     } else if (8 < data.length < 40) {
       return moment(data, "MMMM Do YYYY, h:mm:ss a").format("ll");
@@ -209,7 +208,7 @@ function Home() {
 
   return (
     <>
-      {user && companyId !== "" && (
+      {user && companyId !== "" ? (
         <>
           <div className="header home-header">
             <p className="header-small">Dashboard</p>
@@ -454,6 +453,8 @@ function Home() {
             </div>
           </div>
         </>
+      ) : (
+        <PleaseLogin />
       )}
     </>
   );

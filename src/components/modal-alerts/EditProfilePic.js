@@ -9,6 +9,7 @@ import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { UserAuth } from "../../context/AuthContext";
 import { updateDoc, doc } from "firebase/firestore";
 import { db } from "../../firebase";
+import moment from "moment"; // reference how to use moment https://momentjs.com/
 
 const EditProfilePic = ({ open, onClose }) => {
   const { user } = UserAuth();

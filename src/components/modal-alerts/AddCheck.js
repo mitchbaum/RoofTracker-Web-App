@@ -7,7 +7,6 @@ import "../modal/Modal.css";
 import moment from "moment";
 import { collection, setDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
-import { UserAuth } from "../../context/AuthContext";
 
 const AddCheck = ({ open, onClose, modify, uid, fileId, itemData }) => {
   const [name, setName] = useState(itemData.itemName ?? "");
@@ -52,14 +51,7 @@ const AddCheck = ({ open, onClose, modify, uid, fileId, itemData }) => {
       setMessage("");
       return setError("No check type selected");
     }
-    const getFromattedDate = new Intl.DateTimeFormat("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
-      second: "2-digit",
-    }).format(Date.now());
+    const getFromattedDate = moment().format("LL");
 
     //  submit and add file
     if (modify === "Edit") {

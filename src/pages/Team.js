@@ -14,6 +14,7 @@ import {
   where,
   getDocs,
 } from "firebase/firestore";
+import PleaseLogin from "../components/error-pages/PleaseLogin";
 
 const Team = () => {
   const { user } = UserAuth();
@@ -130,7 +131,7 @@ const Team = () => {
 
   return (
     <>
-      {user && (
+      {user ? (
         <>
           <div className="header">
             <p className="header-small">Members</p>
@@ -330,6 +331,8 @@ const Team = () => {
             {isPending && <TableTemp />}
           </div>
         </>
+      ) : (
+        <PleaseLogin />
       )}
     </>
   );
