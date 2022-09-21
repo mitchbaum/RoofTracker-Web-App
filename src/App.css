@@ -80,6 +80,8 @@ img {
   height: 40px;
   outline: 0;
   transition: all 0.3s;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
 .input-group > textarea {
