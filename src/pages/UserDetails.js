@@ -111,7 +111,7 @@ const UserDetails = () => {
 
   return (
     <>
-      {user && (
+      {user ? (
         <>
           {showAddFile && (
             <AddFile
@@ -394,9 +394,7 @@ const UserDetails = () => {
               </div>
             </>
           ) : (
-            <>
-              <PleaseLogin />
-            </>
+            <></>
           )}
 
           <div className="header">
@@ -407,6 +405,10 @@ const UserDetails = () => {
             {/* {isPending && <div style={{ color: "#777676" }}>Loading...</div>} */}
             {isPending && <TableTemp />}
           </div>
+        </>
+      ) : (
+        <>
+          <PleaseLogin />
         </>
       )}
     </>
