@@ -134,6 +134,7 @@ input[type="checkbox"] {
   border-style: none;
   border-bottom: none;
   font-size: 12px;
+  -webkit-appearance: none;
 }
 
 .input-group.account-info {
@@ -289,10 +290,6 @@ input:invalid[focused="true"] ~ .error-message {
   }
   .input-group > select {
     background-color: white;
-    -webkit-appearance: none;
-  }
-
-  .input-group > input[type="file"] {
     -webkit-appearance: none;
   }
 }
