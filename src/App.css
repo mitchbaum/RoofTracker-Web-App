@@ -291,4 +291,8 @@ input:invalid[focused="true"] ~ .error-message {
     background-color: white;
     -webkit-appearance: none;
   }
+
+  .input-group > input[type="file"] {
+    -webkit-appearance: none;
+  }
 }
