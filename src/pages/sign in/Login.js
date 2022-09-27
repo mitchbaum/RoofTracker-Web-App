@@ -74,7 +74,7 @@ const Login = () => {
                 Sign Up
               </button>
 
-              <button className="top-btn">Tour</button>
+              {/* <button className="top-btn">Tour</button> */}
             </div>
             <div className="login-form-container">
               <img className="media-logo media-hide" src={Logo}></img>
