@@ -13,6 +13,7 @@ const MyFiles = () => {
   const { user } = UserAuth();
 
   const [filesData, setFilesData] = useState([]);
+  const [filterBy, setFilterBy] = useState("Open");
 
   const [searchTerm, setSearchTerm] = useState("");
   const [isPending, setisPending] = useState(true);
@@ -116,6 +117,24 @@ const MyFiles = () => {
                   setSearchTerm(event.target.value);
                 }}
               />
+              <div className="input-group" style={{ margin: "0" }}>
+                <select
+                  value={filterBy}
+                  onChange={(e) => {
+                    setFilterBy(e.target.value);
+                  }}
+                >
+                  <option disabled={true} value="">
+                    Filter by job status...
+                  </option>
+                  <option key="1" value="Open">
+                    Open
+                  </option>
+                  <option key="2" value="Closed">
+                    Closed
+                  </option>
+                </select>
+              </div>
               <button
                 className="status-btn security-access show-summary-btn"
                 onClick={() => setShowAddFile(!showAddFile)}
@@ -152,15 +171,24 @@ const MyFiles = () => {
                         : -1
                     )
                     .filter((val) => {
-                      if (searchTerm == "") {
-                        return val;
-                      } else if (
-                        val.name
-                          .toString()
-                          .toLowerCase()
-                          .includes(searchTerm.toLowerCase())
-                      ) {
-                        return val;
+                      if (searchTerm != "") {
+                        if (
+                          val.name
+                            .toString()
+                            .toLowerCase()
+                            .includes(searchTerm.toLowerCase())
+                        ) {
+                          return val;
+                        }
+                      } else if (searchTerm == "") {
+                        if (
+                          val.type
+                            .toString()
+                            .toLowerCase()
+                            .includes(filterBy.toLowerCase())
+                        ) {
+                          return val;
+                        }
                       }
                     })
                     .map((val, key) => {
