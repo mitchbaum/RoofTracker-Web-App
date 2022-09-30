@@ -398,8 +398,8 @@ const FileInformation = () => {
                                   </td>
                                   <td>
                                     {val.lineNumber !== ""
-                                      ? "-"
-                                      : val.lineNumber}
+                                      ? val.lineNumber
+                                      : "-"}
                                   </td>
                                 </tr>
                               </tbody>

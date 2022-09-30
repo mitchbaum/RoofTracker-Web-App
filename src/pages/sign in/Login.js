@@ -130,14 +130,15 @@ const Login = () => {
                   </p>
                 </Link>
               </form>
-              <Link
-                to="/login"
+              <a
+                href="https://mitchbaum.github.io/Roof-Tracker-Support-Website/"
                 style={{ textDecoration: "none" }}
                 className="help-and-support"
+                target="_blank"
               >
                 <MdHelp style={{ marginTop: "2px" }} />
                 <span style={{ marginLeft: "6px" }}>Help and Support</span>
-              </Link>
+              </a>
               <img className="app-store-logo" src={WhiteApple}></img>
             </div>
           </div>
