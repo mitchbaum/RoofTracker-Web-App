@@ -1,3 +1,9 @@
+A web based admin dashboard portal and companion to the Roof Tracker iOS app that utilizes the same database to provide real-time data to sales reps in the field as they collect payments from customers. With the dashboard feature available only on the web, administrators can view and manage the files of their sales force. Use the login above to explore the site.
+
+Contact me for dummy login and password to test the site!
+
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
