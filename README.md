@@ -15,6 +15,7 @@ Created using React.js, CSS, Google Cloud - Firebase
 - Add a list of tasks to be done within the company
 - Add users to your company
 - Assign user permissions (i.e. upgrading or downgrading their account from user to admin)
+- Responsive to mobile devices
 
 
 ### Users
