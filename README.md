@@ -1,5 +1,7 @@
 <img src="https://user-images.githubusercontent.com/71997310/195221172-710718a8-58d2-4838-b756-76830053e84f.png" width="128"/>
 
+# Roof Tracker Web App
+
 # Purpose
 
 A web based admin dashboard portal and companion to the Roof Tracker iOS app that utilizes the same database to provide real-time data to sales reps in the field as they collect payments from customers. With the dashboard feature available only on the web, administrators can view and manage the files of their sales force. This application will automatically calculate all the numbers a sales rep needs for each project without having to work out the math by hand.
