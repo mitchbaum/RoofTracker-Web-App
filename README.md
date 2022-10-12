@@ -1,78 +1,26 @@
-A web based admin dashboard portal and companion to the Roof Tracker iOS app that utilizes the same database to provide real-time data to sales reps in the field as they collect payments from customers. With the dashboard feature available only on the web, administrators can view and manage the files of their sales force. Use the login above to explore the site.
-
-Contact me for dummy login and password to test the site!
-
-View the web app here: https://roof-tracker-web-app-2lsd.vercel.app/
 
 
+# Purpose
 
-# Getting Started with Create React App
+A web based admin dashboard portal and companion to the Roof Tracker iOS app that utilizes the same database to provide real-time data to sales reps in the field as they collect payments from customers. With the dashboard feature available only on the web, administrators can view and manage the files of their sales force. This application will automatically calculate all the numbers a sales rep needs for each project without having to work out the math by hand. 
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Features
+### Superadmins/Admins
+- Access to user file data within their company (can modify these files too)
+- Add files containing insurance checks, personal checks, and work to do
+- Add a list of tasks to be done within the company
+- Add users to your company
+- Assign user permissions (i.e. upgrading or downgrading their account from user to admin)
 
-## Available Scripts
 
-In the project directory, you can run:
+### Users
+- Create a company (if you have the registration code)
+- Add files containing insurance checks, personal checks, and work to do 
 
-### `npm start`
+# How To Use
+Go here to see the live site: https://roof-tracker-web-app-2lsd.vercel.app/
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+To tour the site with an existing login credentials use these: email/password fefoo@gmail.com/fefoo123
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Login/Create Account
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
