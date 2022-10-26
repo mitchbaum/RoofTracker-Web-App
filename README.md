@@ -9,6 +9,10 @@ A web based admin dashboard portal and companion to the Roof Tracker iOS app tha
 Created using React.js, CSS, Google Cloud - Firebase
 
 # Features
+### Superadmins
+- Ability to change the company name
+- Modify the new user registration code
+
 ### Superadmins/Admins
 - Access to user file data within their company (can modify these files too)
 - Add files containing insurance checks, personal checks, and work to do
