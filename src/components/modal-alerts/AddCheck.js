@@ -8,7 +8,16 @@ import moment from "moment";
 import { collection, setDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 
-const AddCheck = ({ open, onClose, modify, uid, fileId, itemData }) => {
+const AddCheck = ({
+  open,
+  onClose,
+  modify,
+  uid,
+  fileId,
+  itemData,
+  permission,
+  authUserId,
+}) => {
   const [name, setName] = useState(itemData.itemName ?? "");
   const [amount, setAmount] = useState(itemData.checkAmount ?? "");
   const [date, setDate] = useState(itemData.checkDate ?? "");
@@ -24,6 +33,10 @@ const AddCheck = ({ open, onClose, modify, uid, fileId, itemData }) => {
     setError("");
     // preventDefault means the form wont submit to a page
     e.preventDefault();
+    if (permission === "view" && authUserId !== uid) {
+      setMessage("");
+      return setError("Unable to add file. You are a viewer");
+    }
 
     if (
       name === itemData.itemName &&

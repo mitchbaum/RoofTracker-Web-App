@@ -35,6 +35,7 @@ const Settings = () => {
   const [saveMessage, setSaveMessage] = useState("");
 
   const [access, setAccess] = useState("");
+  const [permission, setPermission] = useState("");
   const [regCode, setRegCode] = useState("");
   const [enterRegCode, setEnterRegCode] = useState("");
   const [pic, setPic] = useState("");
@@ -60,6 +61,7 @@ const Settings = () => {
       setEmail(doc.data()?.email);
 
       setAccess(doc.data()?.access);
+      setPermission(doc.data()?.permission);
 
       setPic(doc.data()?.["profile pic url"]);
       setCompanyId(doc.data()?.companyId);
@@ -225,6 +227,13 @@ const Settings = () => {
             <div className="header">{isPending && <AccountDetailsTemp />}</div>
           ) : (
             <>
+              {permission === "view" && (
+                <div className="permission">
+                  You only have viewing permissions. You will not be able to
+                  edit files or users until this is changed. Talk to Mitch for
+                  help.
+                </div>
+              )}
               <div className="profile-container">
                 <div className="left-column">
                   {pic == "" ? (

@@ -33,6 +33,16 @@ li {
   overflow: auto;
 }
 
+.permission {
+  margin: 1rem 15rem 2rem 15rem;
+  font-size: 14px;
+  border: 1px solid #d30b0e;
+  border-radius: 5px;
+  padding: 6px 10px;
+  color: #d30b0e;
+  text-align: center;
+}
+
 .role {
   margin: 1.5rem 0rem 0 1rem;
   font-size: 12px;

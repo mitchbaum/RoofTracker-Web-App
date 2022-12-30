@@ -1,5 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import { dropIn } from "../modal/DropIn";
 import "../modal/Modal.css";
 import { updateDoc, doc, deleteDoc } from "firebase/firestore";
@@ -7,7 +8,18 @@ import { db } from "../../firebase";
 import { getStorage, ref, deleteObject } from "firebase/storage";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
 
-const AreYouSure = ({ fileData, open, onClose, action, uid, itemData }) => {
+const AreYouSure = ({
+  fileData,
+  open,
+  onClose,
+  action,
+  uid,
+  itemData,
+  permission,
+  authUserId,
+}) => {
+  const [error, setError] = useState("");
+
   if (!open) return null;
 
   const storage = getStorage();
@@ -46,17 +58,27 @@ const AreYouSure = ({ fileData, open, onClose, action, uid, itemData }) => {
     }
     if (action == "Delete File") {
       const storageRef = ref(storage, `${uid}/${fileData.id}.png`);
+      if (permission === "view" && authUserId !== uid) {
+        return setError("Unable to delete file. You are a viewer");
+      }
+      if (fileData.imageData === "") {
+        return deleteDoc(doc(db, `Users/${uid}/Files/${fileData.id}`));
+      }
       // Delete the file image in storage
       deleteObject(storageRef)
         .then(() => {
           deleteDoc(doc(db, `Users/${uid}/Files/${fileData.id}`));
         })
         .catch((error) => {
-          return console.log(error);
+          console.log(error);
+          return setError("Unable to delete file");
         });
     }
 
     if (action == "Delete Check") {
+      if (permission === "view" && authUserId !== uid) {
+        return setError("Unable to delete check. You are a viewer");
+      }
       await deleteDoc(
         doc(
           db,
@@ -71,6 +93,9 @@ const AreYouSure = ({ fileData, open, onClose, action, uid, itemData }) => {
         });
     }
     if (action == "Delete ACV Item") {
+      if (permission === "view" && authUserId !== uid) {
+        return setError("Unable to delete ACV item. You are a viewer");
+      }
       await deleteDoc(
         doc(
           db,
@@ -86,6 +111,9 @@ const AreYouSure = ({ fileData, open, onClose, action, uid, itemData }) => {
     }
 
     if (action == "Delete RCV Item") {
+      if (permission === "view" && authUserId !== uid) {
+        return setError("Unable to delete RCV item. You are a viewer");
+      }
       await deleteDoc(
         doc(
           db,
@@ -101,6 +129,9 @@ const AreYouSure = ({ fileData, open, onClose, action, uid, itemData }) => {
     }
 
     if (action == "Delete Cash Item") {
+      if (permission === "view" && authUserId !== uid) {
+        return setError("Unable to delete cash item. You are a viewer");
+      }
       await deleteDoc(
         doc(
           db,
@@ -232,6 +263,12 @@ const AreYouSure = ({ fileData, open, onClose, action, uid, itemData }) => {
         >
           Cancel
         </button>
+        <p
+          className="error-message"
+          style={{ color: "#d30b0e", display: "block" }}
+        >
+          {error}
+        </p>
       </motion.div>
     </div>
   );

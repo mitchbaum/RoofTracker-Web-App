@@ -14,7 +14,7 @@ import { db } from "../../firebase";
 import Compressor from "compressorjs";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
 
-const AddFile = ({ onAdd, open, onClose, uid }) => {
+const AddFile = ({ onAdd, open, onClose, uid, permission }) => {
   const { user } = UserAuth();
 
   const [message, setMessage] = useState("");
@@ -50,6 +50,10 @@ const AddFile = ({ onAdd, open, onClose, uid }) => {
     e.preventDefault();
     setMessage("Saving...");
     setError("");
+    if (permission === "view" && user.uid !== uid) {
+      setMessage("");
+      return setError("Unable to add file. You are a viewer");
+    }
     const getFromattedDate = moment().format("LL");
     //  submit and add file
     addFile({
@@ -232,7 +236,6 @@ const AddFile = ({ onAdd, open, onClose, uid }) => {
                 </span>
               </div>
             </div>
-
             <input
               className="status-btn deactivate show-summary-btn"
               type="submit"

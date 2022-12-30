@@ -30,12 +30,16 @@ const UserDetails = () => {
   const [name, setName] = useState("");
   const [pic, setPic] = useState("");
   const [access, setAccess] = useState("");
+  const [permission, setPermission] = useState("");
   const [email, setEmail] = useState("");
   const [filesData, setFilesData] = useState([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    onSnapshot(doc(db, "Users", `${user.uid}`), (doc) => {
+      setPermission(doc.data()?.permission);
+    });
     onSnapshot(doc(db, "Users", `${uid}`), (doc) => {
       setName(doc.data()?.name);
       setPic(doc.data()?.["profile pic url"]);
@@ -118,6 +122,7 @@ const UserDetails = () => {
               open={showAddFile}
               onClose={() => setShowAddFile(false)}
               uid={uid}
+              permission={permission}
             />
           )}
           {showAlert && (
@@ -153,7 +158,9 @@ const UserDetails = () => {
               <p className="name">{name}</p>
               <p className="email">{email}</p>
             </div>
-            {uid !== user?.uid && adminAccess === "Superadmin" ? (
+            {uid !== user?.uid &&
+            adminAccess === "Superadmin" &&
+            permission !== "view" ? (
               <>
                 <div>
                   <ul className="button-container">

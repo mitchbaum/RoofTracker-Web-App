@@ -185,7 +185,12 @@ const Team = () => {
                       >
                         Name
                       </th>
-                      <th onClick={() => sorting("access")}>Role</th>
+                      <th
+                        style={{ width: "15%" }}
+                        onClick={() => sorting("access")}
+                      >
+                        Role
+                      </th>
                       <th onClick={() => sorting("email")}>Email</th>
                       <th
                         style={{ width: "10%" }}

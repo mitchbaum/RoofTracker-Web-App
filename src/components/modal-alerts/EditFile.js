@@ -23,7 +23,7 @@ import { storage } from "../../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
 
-const EditFile = ({ open, onClose, data, fileId, uid }) => {
+const EditFile = ({ open, onClose, data, fileId, uid, permission }) => {
   const { user } = UserAuth();
 
   const [message, setMessage] = useState("");
@@ -58,6 +58,10 @@ const EditFile = ({ open, onClose, data, fileId, uid }) => {
     // preventDefault means the form wont submit to a page
     e.preventDefault();
     setMessage("Saving...");
+    if (permission === "view" && user.uid !== uid) {
+      setMessage("");
+      return setError("Unable to add file. You are a viewer");
+    }
     const getFromattedDate = moment().format("LL");
 
     if (imageData !== data.imageData && imageData !== "") {

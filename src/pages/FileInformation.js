@@ -45,12 +45,16 @@ const FileInformation = () => {
   const [showAddACV, setShowAddACV] = useState(false);
   const [showAddRCV, setShowAddRCV] = useState(false);
   const [showAddCash, setShowAddCash] = useState(false);
+  const [permission, setPermission] = useState("");
 
   const [text, setText] = useState("");
 
   const navigate = useNavigate();
 
   useEffect(() => {
+    onSnapshot(doc(db, "Users", `${user.uid}`), (doc) => {
+      setPermission(doc.data()?.permission);
+    });
     onSnapshot(doc(db, `Users/${uid}/Files/${fileId}`), (doc) => {
       if (doc.data() === undefined) {
         if (uid !== user.uid) {
@@ -168,6 +172,7 @@ const FileInformation = () => {
               fileId={fileId}
               uid={uid}
               amount={itemAmount}
+              permission={permission}
             />
           )}
           {showAlert && (
@@ -178,6 +183,8 @@ const FileInformation = () => {
               action={action}
               uid={uid}
               itemData={itemData}
+              permission={permission}
+              authUserId={user.uid}
             />
           )}
           {showAddCheck && (
@@ -188,6 +195,8 @@ const FileInformation = () => {
               uid={uid}
               fileId={fileId}
               itemData={itemData}
+              permission={permission}
+              authUserId={user.uid}
             />
           )}
           {showAddACV && (
@@ -198,6 +207,8 @@ const FileInformation = () => {
               uid={uid}
               fileId={fileId}
               itemData={itemData}
+              permission={permission}
+              authUserId={user.uid}
             />
           )}
           {showAddRCV && (
@@ -208,6 +219,8 @@ const FileInformation = () => {
               uid={uid}
               fileId={fileId}
               itemData={itemData}
+              permission={permission}
+              authUserId={user.uid}
             />
           )}
           {showAddCash && (
@@ -218,6 +231,8 @@ const FileInformation = () => {
               uid={uid}
               fileId={fileId}
               itemData={itemData}
+              permission={permission}
+              authUserId={user.uid}
             />
           )}
 

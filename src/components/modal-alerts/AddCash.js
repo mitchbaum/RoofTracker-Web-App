@@ -8,7 +8,16 @@ import { collection, setDoc, doc, updateDoc } from "firebase/firestore";
 import { db } from "../../firebase";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
 
-const AddCash = ({ open, onClose, modify, uid, fileId, itemData }) => {
+const AddCash = ({
+  open,
+  onClose,
+  modify,
+  uid,
+  fileId,
+  itemData,
+  permission,
+  authUserId,
+}) => {
   const [name, setName] = useState(itemData.itemName ?? "");
   const [price, setPrice] = useState(itemData.linePrice ?? "");
   const [note, setNote] = useState(itemData.lineNote ?? "");
@@ -23,6 +32,15 @@ const AddCash = ({ open, onClose, modify, uid, fileId, itemData }) => {
     setError("");
     // preventDefault means the form wont submit to a page
     e.preventDefault();
+    if (permission === "view" && authUserId !== uid) {
+      setMessage("");
+      return setError("Unable to add file. You are a viewer");
+    }
+
+    if (permission === "view" && authUserId !== uid) {
+      setMessage("");
+      return setError("Unable to add file. You are a viewer");
+    }
 
     const getFromattedDate = moment().format("LL");
 

@@ -101,6 +101,7 @@ const MyFiles = () => {
               open={showAddFile}
               onClose={() => setShowAddFile(false)}
               uid={user?.uid}
+              permission={user?.permission}
             />
           )}
 
