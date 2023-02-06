@@ -212,7 +212,7 @@ function Home() {
         <>
           <div className="header home-header">
             <p className="header-small">Dashboard</p>
-            <h1 className="header-large">Homee</h1>
+            <h1 className="header-large">Home</h1>
           </div>
           {/* <div className="card-container">
         <div
