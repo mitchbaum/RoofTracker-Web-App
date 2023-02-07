@@ -101,6 +101,10 @@
   margin: 1rem 0 0 15rem;
 }
 
+.print-only {
+  display: none;
+}
+
 @media screen and (max-width: 600px) {
   .top-two-card-container {
     display: block;
@@ -132,5 +136,33 @@
   .left {
     margin-top: 2rem;
     width: 100%;
+  }
+}
+
+/* portrait */
+@media print {
+  .top-two-card-container {
+    display: block;
+    margin: 1rem 1rem 2rem 1rem;
+  }
+  .box {
+    border: none;
+    padding: 1.5rem;
+  }
+  .header-small {
+    color: #000000;
+    font-weight: 300;
+  }
+  .left {
+    margin-top: 1.5rem;
+    width: 100%;
+    padding: 0 1.5rem;
+  }
+  .print-only {
+    display: block;
+    margin: 1rem 0 0 0rem;
+    font-size: 14px;
+    color: #000000;
+    font-weight: 300;
   }
 }

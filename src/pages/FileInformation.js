@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { FaTimes } from "react-icons/fa";
 import AddACV from "../components/modal-alerts/AddACV";
@@ -23,6 +23,7 @@ import AreYouSure from "../components/modal-alerts/AreYouSure";
 import { useNavigate } from "react-router-dom";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
 import PleaseLogin from "../components/error-pages/PleaseLogin";
+import ReactToPrint from "react-to-print";
 
 const FileInformation = () => {
   const { uid, fileId } = useParams();
@@ -50,6 +51,8 @@ const FileInformation = () => {
   const [text, setText] = useState("");
 
   const navigate = useNavigate();
+
+  const componentRef = useRef();
 
   useEffect(() => {
     onSnapshot(doc(db, "Users", `${user.uid}`), (doc) => {
@@ -237,21 +240,34 @@ const FileInformation = () => {
           )}
 
           {showSummary ? (
-            <>
+            <div>
               <button
                 className="status-btn deactivate show-summary-btn close-summary-container"
                 onClick={() => setShowSummary(!showSummary)}
               >
                 Close Summary
               </button>
+              <ReactToPrint
+                trigger={() => (
+                  <button
+                    className="status-btn security-access show-summary-btn close-summary-container"
+                    style={{ marginLeft: "1.5rem" }}
+                  >
+                    Print
+                  </button>
+                )}
+                content={() => componentRef.current}
+              />
               <div
                 className="top-two-card-container"
                 style={{ marginTop: "1rem" }}
+                ref={componentRef}
               >
                 <div className="box summary-page-right">
                   <h1 className="header-large">
                     {fileData.name !== "" ? fileData.name : "-"}
                   </h1>
+                  <p className="print-only">Sales Rep: {salesRep}</p>
                   <div style={{ marginTop: "1rem" }}>
                     <p>Insurance Still Owes Homeowner:</p>
                     <p className="FI-message note">
@@ -424,7 +440,7 @@ const FileInformation = () => {
                   </div>
                 </div>
               </div>
-            </>
+            </div>
           ) : (
             <>
               <div className="header">
