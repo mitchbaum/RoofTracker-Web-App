@@ -4,7 +4,13 @@ import CurrencyInput from "react-currency-input-field"; //DOCS: https://bestofre
 import { motion } from "framer-motion";
 import { dropIn } from "../modal/DropIn";
 import "../modal/Modal.css";
-import { collection, setDoc, doc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  setDoc,
+  doc,
+  updateDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
 
@@ -95,6 +101,7 @@ const AddCash = ({
       .then(() => {
         updateDoc(doc(db, `Users/${uid}/Files/${fileId}`), {
           timeStamp: timestamp,
+          modified: serverTimestamp(),
         });
         return;
       })
@@ -116,6 +123,7 @@ const AddCash = ({
     ).then(() => {
       updateDoc(doc(db, `Users/${uid}/Files/${fileId}`), {
         timeStamp: timestamp,
+        modified: serverTimestamp(),
       });
       return;
     });

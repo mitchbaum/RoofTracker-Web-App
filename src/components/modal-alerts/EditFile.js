@@ -11,6 +11,7 @@ import Compressor from "compressorjs";
 import {
   setDoc,
   updateDoc,
+  serverTimestamp,
   doc,
   onSnapshot,
   collection,
@@ -106,6 +107,7 @@ const EditFile = ({ open, onClose, data, fileId, uid, permission }) => {
 
     updateDoc(doc(db, `Users/${uid}/Files/${fileId}`), {
       timeStamp: getFromattedDate,
+      modified: serverTimestamp(),
     });
     return;
   };

@@ -5,7 +5,13 @@ import { motion } from "framer-motion";
 import { dropIn } from "../modal/DropIn";
 import "../modal/Modal.css";
 import moment from "moment";
-import { collection, setDoc, doc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  setDoc,
+  doc,
+  updateDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 
 const AddCheck = ({
@@ -107,6 +113,7 @@ const AddCheck = ({
       .then(() => {
         updateDoc(doc(db, `Users/${uid}/Files/${fileId}`), {
           timeStamp: timestamp,
+          modified: serverTimestamp(),
         });
         return;
       })
@@ -129,6 +136,7 @@ const AddCheck = ({
     ).then(() => {
       updateDoc(doc(db, `Users/${uid}/Files/${fileId}`), {
         timeStamp: timestamp,
+        modified: serverTimestamp(),
       });
       return;
     });

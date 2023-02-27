@@ -6,7 +6,14 @@ import "../styles/UserDetails.css";
 import AccountPicPlaceholder from "../logo/account-icon.png";
 import { UserAuth } from "../context/AuthContext";
 import { db } from "../firebase";
-import { doc, onSnapshot, collection } from "firebase/firestore";
+import {
+  doc,
+  onSnapshot,
+  collection,
+  getDocs,
+  query,
+  where,
+} from "firebase/firestore";
 import AreYouSure from "../components/modal-alerts/AreYouSure";
 import TableTemp from "../components/isPending-templates/TableTemp";
 import AccountDetailsTemp from "../components/isPending-templates/AccountDetailsTemp";
@@ -32,6 +39,7 @@ const UserDetails = () => {
   const [access, setAccess] = useState("");
   const [permission, setPermission] = useState("");
   const [email, setEmail] = useState("");
+  const [filterBy, setFilterBy] = useState("Open");
   const [filesData, setFilesData] = useState([]);
 
   const navigate = useNavigate();
@@ -49,30 +57,35 @@ const UserDetails = () => {
       setShowAlert(false);
     });
 
-    onSnapshot(collection(db, `Users/${uid}/Files`), (snapshot) => {
-      fetchFiles(
-        snapshot.docs.map(
-          (doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          }),
-          (error) => {
-            setIsPending(false);
-            return setError(
-              "Error occured loading your files. Double check your connection and try again. If error persists, contact Roof Tracker support."
-            );
-          }
-        )
-      );
-      setShowAddFile(false);
-    });
-  }, [user?.uid]);
+    getFiles(filterBy);
+  }, [user?.uid, filterBy]);
 
   useEffect(() => {
     onSnapshot(doc(db, "Users", `${user?.uid}`), (doc) => {
       setAdminAccess(doc.data()?.access);
     });
   }, [user?.uid]);
+
+  const getFiles = async (filter) => {
+    const collectionRef = collection(db, `Users/${uid}/Files`);
+    const q = query(collectionRef, where("type", "==", filter));
+    const snapshot = await getDocs(q);
+    fetchFiles(
+      snapshot.docs.map(
+        (doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }),
+        (error) => {
+          setIsPending(false);
+          return setError(
+            "Error occured loading your files. Double check your connection and try again. If error persists, contact Roof Tracker support."
+          );
+        }
+      )
+    );
+    setShowAddFile(false);
+  };
 
   const fetchFiles = (files) => {
     let data = [];
@@ -287,11 +300,29 @@ const UserDetails = () => {
                 type="text"
                 className="search"
                 placeholder="Search..."
-                style={{ width: "50%" }}
                 onChange={(event) => {
                   setSearchTerm(event.target.value);
                 }}
               />
+              <div style={{ width: "2rem" }}></div>
+              <div className="input-group" style={{ margin: "0" }}>
+                <select
+                  value={filterBy}
+                  onChange={(e) => {
+                    setFilterBy(e.target.value);
+                  }}
+                >
+                  <option disabled={true} value="">
+                    Filter by job status...
+                  </option>
+                  <option key="1" value="Open">
+                    Open
+                  </option>
+                  <option key="2" value="Closed">
+                    Closed
+                  </option>
+                </select>
+              </div>
               <button
                 className="status-btn security-access show-summary-btn"
                 onClick={() => setShowAddFile(!showAddFile)}

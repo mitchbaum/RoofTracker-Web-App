@@ -9,7 +9,13 @@ import EditProfilePic from "./EditProfilePic";
 import { storage } from "../../firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { UserAuth } from "../../context/AuthContext";
-import { collection, setDoc, doc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  setDoc,
+  doc,
+  updateDoc,
+  serverTimestamp,
+} from "firebase/firestore";
 import { db } from "../../firebase";
 import Compressor from "compressorjs";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
@@ -72,6 +78,7 @@ const AddFile = ({ onAdd, open, onClose, uid, permission }) => {
       pymtCheckTotal: "",
       rcvItemTotal: "",
       timeStamp: `${getFromattedDate}`,
+      modified: serverTimestamp(),
     });
     return;
   };

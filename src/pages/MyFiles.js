@@ -5,7 +5,17 @@ import TableTemp from "../components/isPending-templates/TableTemp";
 import Placeholder from "../logo/file-icon.png";
 import { UserAuth } from "../context/AuthContext";
 import { db } from "../firebase";
-import { doc, onSnapshot, collection, getDocs } from "firebase/firestore";
+import {
+  doc,
+  onSnapshot,
+  collection,
+  getDocs,
+  query,
+  where,
+  orderBy,
+  limit,
+  startAfter,
+} from "firebase/firestore";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
 import PleaseLogin from "../components/error-pages/PleaseLogin";
 
@@ -34,24 +44,30 @@ const MyFiles = () => {
   }, [user?.uid]);
 
   useEffect(() => {
-    onSnapshot(collection(db, `Users/${user?.uid}/Files`), (snapshot) => {
-      fetchFiles(
-        snapshot.docs.map(
-          (doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          }),
-          (error) => {
-            setisPending(false);
-            return setError(
-              "Error occured loading your files. Double check your connection and try again. If error persists, contact Roof Tracker support."
-            );
-          }
-        )
-      );
-      setShowAddFile(false);
-    });
-  }, [user?.uid]);
+    getFiles(filterBy);
+  }, [user?.uid, filterBy]);
+
+  const getFiles = async (filter) => {
+    const collectionRef = collection(db, `Users/${user?.uid}/Files`);
+    const q = query(collectionRef, where("type", "==", filter));
+    const snapshot = await getDocs(q);
+    console.log(snapshot.docs);
+    fetchFiles(
+      snapshot.docs.map(
+        (doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }),
+        (error) => {
+          setisPending(false);
+          return setError(
+            "Error occured loading your files. Double check your connection and try again. If error persists, contact Roof Tracker support."
+          );
+        }
+      )
+    );
+    setShowAddFile(false);
+  };
 
   const clicked = (val) => {
     // Here
@@ -112,12 +128,12 @@ const MyFiles = () => {
               <input
                 type="text"
                 className="search"
-                style={{ width: "50%" }}
                 placeholder="Search..."
                 onChange={(event) => {
                   setSearchTerm(event.target.value);
                 }}
               />
+              <div style={{ width: "2rem" }}></div>
               <div className="input-group" style={{ margin: "0" }}>
                 <select
                   value={filterBy}

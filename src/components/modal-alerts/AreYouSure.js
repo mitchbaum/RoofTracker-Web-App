@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { dropIn } from "../modal/DropIn";
 import "../modal/Modal.css";
-import { updateDoc, doc, deleteDoc } from "firebase/firestore";
+import { updateDoc, doc, deleteDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebase";
 import { getStorage, ref, deleteObject } from "firebase/storage";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
@@ -147,6 +147,7 @@ const AreYouSure = ({
     }
     updateDoc(doc(db, `Users/${uid}/Files/${fileData.id}`), {
       timeStamp: getFromattedDate,
+      modified: serverTimestamp(),
     });
 
     return;
