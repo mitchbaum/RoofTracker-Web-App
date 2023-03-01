@@ -37,7 +37,7 @@ function Home() {
   const [redirect, setRedirect] = useState(false);
 
   const [filterBy, setFilterBy] = useState("Open");
-  const [filterByModified, setFilterByModified] = useState("60");
+  const [filterByModified, setFilterByModified] = useState("720");
   const [showAddTask, setShowAddTask] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -326,8 +326,8 @@ function Home() {
                     <option disabled={true} value="">
                       Filter by recently modified...
                     </option>
-                    <option key="1" value="60">
-                      1 Hour
+                    <option key="1" value="720">
+                      12 Hours
                     </option>
                     <option key="2" value="1440">
                       24 Hours
