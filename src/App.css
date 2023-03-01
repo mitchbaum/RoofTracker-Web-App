@@ -39,10 +39,6 @@ button:active,
   margin-bottom: 26px;
 }
 
-.width-80 {
-  width: 75% !important;
-}
-
 .input-group > label,
 .input-group > input,
 .input-group > textarea,
@@ -189,6 +185,10 @@ input[type="checkbox"] {
   display: flex;
   justify-content: space-between;
 }
+.flex-end {
+  display: flex;
+  justify-content: flex-end;
+}
 
 .flex-space-evenly,
 .select-flex {
@@ -271,7 +271,6 @@ input:invalid[focused="true"] ~ .error-message {
 .media-hide {
   display: none;
 }
-
 @media only screen and (max-width: 700px) {
   .media-hide {
     display: block;
@@ -282,7 +281,7 @@ input:invalid[focused="true"] ~ .error-message {
   }
 
   .width-80 {
-    width: 50% !important;
+    width: 65% !important;
   }
 
   .select-flex {

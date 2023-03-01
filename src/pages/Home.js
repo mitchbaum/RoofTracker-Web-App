@@ -20,6 +20,8 @@ import {
   query,
   where,
   getDocs,
+  serverTimestamp,
+  updateDoc,
   orderBy,
   limit,
 } from "firebase/firestore";
@@ -35,6 +37,7 @@ function Home() {
   const [redirect, setRedirect] = useState(false);
 
   const [filterBy, setFilterBy] = useState("Open");
+  const [filterByModified, setFilterByModified] = useState("60");
   const [showAddTask, setShowAddTask] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -90,9 +93,9 @@ function Home() {
   //get members
   useEffect(() => {
     if (didMount === false && access !== "User" && access !== "Inactive") {
-      fetchTeam(companyId, filterBy);
+      fetchTeam(companyId, filterBy, filterByModified);
     }
-  }, [companyId, filterBy]);
+  }, [companyId, filterBy, filterByModified]);
 
   const fetchTasks = async (tasks) => {
     let data = [];
@@ -102,7 +105,7 @@ function Home() {
     setTasksData(data);
   };
 
-  const fetchTeam = async (cid, filter) => {
+  const fetchTeam = async (cid, filter, filterModified) => {
     if (cid) {
       setError("");
       setMessage("Loading...");
@@ -127,7 +130,16 @@ function Home() {
       );
       results.forEach(async (result) => {
         const collectionRef = collection(db, `Users/${result.uid}/Files`);
-        const q = query(collectionRef, where("type", "==", filter));
+        const q = query(
+          collectionRef,
+          where("type", "==", filter),
+          where(
+            "modified",
+            ">",
+            new Date(Date.now() - filterModified * 60 * 1000)
+          ) // 30 minutes before current time ref: https://medium.com/firebase-developers/the-secrets-of-firestore-fieldvalue-servertimestamp-revealed-29dd7a38a82b
+        );
+        //const q = query(collectionRef, where("type", "!=", ""));
 
         const snapshot = await getDocs(q);
 
@@ -149,7 +161,6 @@ function Home() {
           result.id
         );
       });
-
       setisPending(false);
     }
   };
@@ -162,11 +173,27 @@ function Home() {
         { ...result, fileOwner: owner, ownerId: id },
       ]);
     });
+    // console.log(id);
+    // console.log(files);
     setisPending(false);
     if (filesData.length == 0) {
       return setError("No files found");
     }
     return;
+  };
+
+  const addDate = (files, id) => {
+    for (let i = 0; i < files.length; i++) {
+      // console.log(files[i].timeStamp);
+      // var today = moment(
+      //   files[i].timeStamp,
+      //   "MMMM Do YYYY, h:mm:ss A"
+      // ).format();
+      // updateDoc(doc(db, `Users/${id}/Files/${files[i].id}`), {
+      //   modified: serverTimestamp(),
+      // });
+      //console.log(today);
+    }
   };
 
   const clicked = (val) => {
@@ -251,12 +278,12 @@ function Home() {
                 className="header"
                 style={{ marginTop: "0", marginLeft: "0rem" }}
               >
-                <p className="header-small">All Files</p>
+                <p className="header-small">Recent Activity</p>
               </div>
               <div className="flex-space-between">
                 <input
                   type="text"
-                  className="search width-80"
+                  className="search"
                   placeholder="Search..."
                   onChange={(event) => {
                     {
@@ -265,12 +292,13 @@ function Home() {
                     }
                   }}
                 />
+                <div style={{ width: "2rem" }}></div>
                 <div className="input-group">
                   <select
                     value={filterBy}
                     onChange={(e) => {
                       setFilterBy(e.target.value);
-                      fetchTeam(companyId, e.target.value);
+                      fetchTeam(companyId, e.target.value, filterByModified);
                     }}
                     style={{ width: "100%" }}
                   >
@@ -285,7 +313,35 @@ function Home() {
                     </option>
                   </select>
                 </div>
+                <div style={{ width: "2rem" }}></div>
+                <div className="input-group">
+                  <select
+                    value={filterByModified}
+                    onChange={(e) => {
+                      setFilterByModified(e.target.value);
+                      fetchTeam(companyId, filterBy, e.target.value);
+                    }}
+                    style={{ width: "100%" }}
+                  >
+                    <option disabled={true} value="">
+                      Filter by recently modified...
+                    </option>
+                    <option key="1" value="60">
+                      1 Hour
+                    </option>
+                    <option key="2" value="1440">
+                      24 Hours
+                    </option>
+                    <option key="3" value="4320">
+                      72 Hours
+                    </option>
+                    <option key="4" value="10080">
+                      1 Week
+                    </option>
+                  </select>
+                </div>
               </div>
+              <div className="flex-end"></div>
 
               {filesData.length > 0 && (
                 <div className="dashboard-element">
