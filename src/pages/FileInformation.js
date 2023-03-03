@@ -1,4 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+import { AiFillPrinter } from "react-icons/ai";
+import { FaCopy } from "react-icons/fa";
+import { BsPrinterFill } from "react-icons/bs";
 import { useParams } from "react-router-dom";
 import { FaTimes } from "react-icons/fa";
 import AddACV from "../components/modal-alerts/AddACV";
@@ -53,6 +56,8 @@ const FileInformation = () => {
   const navigate = useNavigate();
 
   const componentRef = useRef();
+  // const textAreaRef = useRef(null);
+  // const [copySuccess, setCopySuccess] = useState("");
 
   useEffect(() => {
     onSnapshot(doc(db, "Users", `${user.uid}`), (doc) => {
@@ -163,6 +168,20 @@ const FileInformation = () => {
     }
   };
 
+  // const copyToClipboard = (e) => {
+  //   var textField = document.createElement("textarea");
+  //   textField.innerText =
+  //     fileData.name + "<br>Insurance Still Owes Homeowner: ";
+  //   document.body.appendChild(textField);
+  //   textField.select();
+  //   document.execCommand("copy");
+  //   textField.remove();
+  //   setCopySuccess("Copied!");
+  //   setTimeout(() => {
+  //     setCopySuccess("");
+  //   }, 2000);
+  // };
+
   return (
     <>
       {user ? (
@@ -251,13 +270,23 @@ const FileInformation = () => {
                 trigger={() => (
                   <button
                     className="status-btn security-access show-summary-btn close-summary-container"
-                    style={{ marginLeft: "1.5rem" }}
+                    style={{ marginLeft: "1.5rem", width: "auto" }}
                   >
-                    Print
+                    <BsPrinterFill />
                   </button>
                 )}
                 content={() => componentRef.current}
               />
+              {/* {document.queryCommandSupported("copy") && (
+                <button
+                  className="status-btn security-access show-summary-btn close-summary-container"
+                  style={{ marginLeft: "1.5rem", width: "auto" }}
+                  onClick={copyToClipboard}
+                >
+                  <FaCopy />
+                  {copySuccess}
+                </button>
+              )} */}
               <div
                 className="top-two-card-container"
                 style={{ marginTop: "1rem" }}
@@ -548,7 +577,7 @@ const FileInformation = () => {
                       fileData.invoice !== ""
                         ? getCurrencyLabel(
                             `${
-                              fileData.coc * 1 +
+                              fileData.invoice * 1 +
                               fileData.cashItemTotal * 1 -
                               fileData.pymtCheckTotal * 1
                             }`,
