@@ -44,30 +44,29 @@ const MyFiles = () => {
   }, [user?.uid]);
 
   useEffect(() => {
-    getFiles(filterBy);
-  }, [user?.uid, filterBy]);
-
-  const getFiles = async (filter) => {
-    const collectionRef = collection(db, `Users/${user?.uid}/Files`);
-    const q = query(collectionRef, where("type", "==", filter));
-    const snapshot = await getDocs(q);
-    console.log(snapshot.docs);
-    fetchFiles(
-      snapshot.docs.map(
-        (doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }),
-        (error) => {
-          setisPending(false);
-          return setError(
-            "Error occured loading your files. Double check your connection and try again. If error persists, contact Roof Tracker support."
-          );
-        }
-      )
+    const q = query(
+      collection(db, `Users/${user?.uid}/Files`),
+      where("type", "==", filterBy)
     );
-    setShowAddFile(false);
-  };
+    onSnapshot(q, (querySnapshot) => {
+      //console.log(querySnapshot.docs);
+      fetchFiles(
+        querySnapshot.docs.map(
+          (doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }),
+          (error) => {
+            setisPending(false);
+            return setError(
+              "Error occured loading your files. Double check your connection and try again. If error persists, contact Roof Tracker support."
+            );
+          }
+        )
+      );
+      setShowAddFile(false);
+    });
+  }, [user?.uid, filterBy]);
 
   const clicked = (val) => {
     // Here

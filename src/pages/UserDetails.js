@@ -66,25 +66,26 @@ const UserDetails = () => {
     });
   }, [user?.uid]);
 
-  const getFiles = async (filter) => {
+  const getFiles = (filter) => {
     const collectionRef = collection(db, `Users/${uid}/Files`);
     const q = query(collectionRef, where("type", "==", filter));
-    const snapshot = await getDocs(q);
-    fetchFiles(
-      snapshot.docs.map(
-        (doc) => ({
-          ...doc.data(),
-          id: doc.id,
-        }),
-        (error) => {
-          setIsPending(false);
-          return setError(
-            "Error occured loading your files. Double check your connection and try again. If error persists, contact Roof Tracker support."
-          );
-        }
-      )
-    );
-    setShowAddFile(false);
+    onSnapshot(q, (querySnapshot) => {
+      fetchFiles(
+        querySnapshot.docs.map(
+          (doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }),
+          (error) => {
+            setIsPending(false);
+            return setError(
+              "Error occured loading your files. Double check your connection and try again. If error persists, contact Roof Tracker support."
+            );
+          }
+        )
+      );
+      setShowAddFile(false);
+    });
   };
 
   const fetchFiles = (files) => {

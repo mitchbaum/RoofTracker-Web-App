@@ -140,7 +140,7 @@ const Team = () => {
             <div className="flex-space-between">
               <input
                 type="text"
-                className="search width-80"
+                className="search"
                 placeholder="Search..."
                 onChange={(event) => {
                   {
@@ -149,6 +149,7 @@ const Team = () => {
                   }
                 }}
               />
+              <div style={{ width: "2rem" }}></div>
               <div className="input-group">
                 <select
                   value={filterBy}

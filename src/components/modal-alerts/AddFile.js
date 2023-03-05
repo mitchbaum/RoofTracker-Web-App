@@ -90,8 +90,8 @@ const AddFile = ({ onAdd, open, onClose, uid, permission }) => {
     const newFile = { id, ...file };
 
     await setDoc(docRef, newFile)
-      .then(() => {
-        uploadImage(id);
+      .then(async () => {
+        await uploadImage(id);
       })
       .catch((err) => {
         setMessage("");
