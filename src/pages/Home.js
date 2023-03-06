@@ -335,8 +335,8 @@ function Home() {
                     <option key="3" value="4320">
                       72 Hours
                     </option>
-                    <option key="4" value="10080">
-                      1 Week
+                    <option key="5" value="1051200">
+                      All
                     </option>
                   </select>
                 </div>
