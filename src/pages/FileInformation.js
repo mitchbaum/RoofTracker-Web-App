@@ -984,7 +984,10 @@ const FileInformation = () => {
               </div>
               <div className="header">
                 <div className="flex-space-between align-bottom">
-                  <p className="header-small">Cash Work to do</p>
+                  <p className="header-small">
+                    Cash Work to do ={" "}
+                    {getCurrencyLabel(fileData.cashItemTotal, "-")}
+                  </p>
                   <button
                     className="status-btn security-access show-summary-btn"
                     onClick={() => {
