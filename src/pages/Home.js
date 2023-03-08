@@ -227,9 +227,10 @@ function Home() {
     if (data == "") {
       return placeholder;
     } else {
-      return (
-        "$" + (data * 1).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
-      );
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(data * 1);
     }
   };
 
