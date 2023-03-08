@@ -36,6 +36,7 @@ table td {
   text-align: left;
   line-height: 2rem;
   border-bottom: 0.5px #d3d3d3 solid;
+  padding-right: 10px;
 }
 
 .table-no-collapse {
