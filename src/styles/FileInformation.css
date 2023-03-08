@@ -105,6 +105,17 @@
   display: none;
 }
 
+.tooltip {
+  display: inline-block;
+  width: 20px;
+  height: auto;
+  background-color: #d30b0e;
+  border-radius: 50%;
+  color: white;
+  text-align: center;
+  margin: 5px 10px;
+}
+
 @media screen and (max-width: 600px) {
   .top-two-card-container {
     display: block;
@@ -136,6 +147,9 @@
   .left {
     margin-top: 2rem;
     width: 100%;
+  }
+  .tooltip {
+    display: none;
   }
 }
 

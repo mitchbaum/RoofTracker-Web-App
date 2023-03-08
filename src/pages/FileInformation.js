@@ -27,6 +27,8 @@ import { useNavigate } from "react-router-dom";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
 import PleaseLogin from "../components/error-pages/PleaseLogin";
 import ReactToPrint from "react-to-print";
+import { Tooltip } from "react-tooltip";
+import "react-tooltip/dist/react-tooltip.css";
 
 const FileInformation = () => {
   const { uid, fileId } = useParams();
@@ -71,7 +73,6 @@ const FileInformation = () => {
         return navigate("/my-files");
       }
       setFileData(doc.data());
-      getSummaryValues(doc.data());
       setShowEdit(false);
     });
     onSnapshot(doc(db, `Users/${uid}`), (doc) => {
@@ -143,12 +144,8 @@ const FileInformation = () => {
     });
   };
 
-  const getSummaryValues = (data) => {
-    // remaining invoice, out of pocket, ins still owes HO,
-  };
-
   const getCurrencyLabel = (data, placeholder) => {
-    if (data == "") {
+    if (data === "") {
       return placeholder;
     } else {
       return new Intl.NumberFormat("en-US", {
@@ -489,7 +486,7 @@ const FileInformation = () => {
                     </button>
                   </div>
                 </div>
-                {fileData.type == "Open" ? (
+                {fileData.type === "Open" ? (
                   <div
                     style={{
                       color: "#00c500",
@@ -512,12 +509,12 @@ const FileInformation = () => {
                     <div className="left-column">
                       <img
                         className={
-                          fileData.imageData == ""
+                          fileData.imageData === ""
                             ? "FI-image-placeholder"
                             : "profile-pic FI-image"
                         }
                         src={
-                          fileData.imageData == ""
+                          fileData.imageData === ""
                             ? Placeholder
                             : fileData.imageData
                         }
@@ -698,34 +695,60 @@ const FileInformation = () => {
               <div className="header">
                 <div className="flex-space-between align-bottom">
                   <p className="header-small">Checks</p>
-                  <button
-                    className="status-btn security-access show-summary-btn"
-                    onClick={() => {
-                      setShowAddCheck(!showAddCheck);
-                      setText("Add");
-                      setItemData("");
-                    }}
-                    style={{ margin: "0", width: "110px" }}
-                  >
-                    Add Check
-                  </button>
+                  <div style={{ display: "flex" }}>
+                    <span
+                      className="tooltip"
+                      data-tooltip-id="tooltip"
+                      // data-tooltip-content='<br /> Paid to Company marked as "Yes" means that the check has been collected.<br /><br />Mark as "No" if the check has not been collected yet. <br />.'
+                    >
+                      ?
+                    </span>
+                    <Tooltip
+                      id="tooltip"
+                      style={{
+                        backgroundColor: "#f5f5f5",
+                        fontWeight: "300",
+                        color: "#222",
+                      }}
+                    >
+                      <div style={{ display: "flex", flexDirection: "column" }}>
+                        <span>
+                          Paid to Company marked as "Yes" means that the check
+                          has been collected.
+                        </span>
+                        <span>
+                          Mark as "No" if the check has not been collected yet.{" "}
+                        </span>
+                      </div>
+                    </Tooltip>
+                    <button
+                      className="status-btn security-access show-summary-btn"
+                      onClick={() => {
+                        setShowAddCheck(!showAddCheck);
+                        setText("Add");
+                        setItemData("");
+                      }}
+                      style={{ margin: "0", width: "110px" }}
+                    >
+                      Add Check
+                    </button>
+                  </div>
                 </div>
               </div>
               <div className="table-container">
                 <table style={{ tableLayout: "auto" }}>
                   <tbody>
                     <tr>
-                      <th style={{ paddingLeft: "10px", width: "30%" }}>
+                      <th style={{ paddingLeft: "10px", width: "20%" }}>
                         Number
                       </th>
                       <th style={{ width: "20%" }}>Amount</th>
                       <th style={{ width: "20%" }}>Date</th>
                       <th style={{ width: "20%" }}>Type</th>
-                      <th style={{ width: "10%" }}>Paid?</th>
+                      <th style={{ width: "20%" }}>Paid to Company</th>
                       <th></th>
                     </tr>
                   </tbody>
-
                   {allItemsData &&
                     allItemsData
                       .filter((val) => {
@@ -837,16 +860,16 @@ const FileInformation = () => {
                                 data-label="Line Item"
                                 style={{ paddingLeft: "10px" }}
                               >
-                                {val.itemName == "" ? "-" : val.itemName}
+                                {val.itemName === "" ? "-" : val.itemName}
                               </td>
                               <td data-label="Price">
                                 {getCurrencyLabel(val.linePrice, "-")}
                               </td>
                               <td data-label="Insurance Line Number">
-                                {val.lineNumber == "" ? "-" : val.lineNumber}
+                                {val.lineNumber === "" ? "-" : val.lineNumber}
                               </td>
                               <td data-label="Notes">
-                                {val.lineNote == "" ? "-" : val.lineNote}
+                                {val.lineNote === "" ? "-" : val.lineNote}
                               </td>
                               <td>
                                 <div className="row-actions">
@@ -920,16 +943,16 @@ const FileInformation = () => {
                                 data-label="Line Item"
                                 style={{ paddingLeft: "10px" }}
                               >
-                                {val.itemName == "" ? "-" : val.itemName}
+                                {val.itemName === "" ? "-" : val.itemName}
                               </td>
                               <td data-label="Price">
                                 {getCurrencyLabel(val.linePrice, "-")}
                               </td>
                               <td data-label="Insurance Line Number">
-                                {val.lineNumber == "" ? "-" : val.lineNumber}
+                                {val.lineNumber === "" ? "-" : val.lineNumber}
                               </td>
                               <td data-label="Notes">
-                                {val.lineNote == "" ? "-" : val.lineNote}
+                                {val.lineNote === "" ? "-" : val.lineNote}
                               </td>
                               <td>
                                 <div className="row-actions">
@@ -1002,13 +1025,13 @@ const FileInformation = () => {
                                 data-label="Job Title"
                                 style={{ paddingLeft: "10px" }}
                               >
-                                {val.itemName == "" ? "-" : val.itemName}
+                                {val.itemName === "" ? "-" : val.itemName}
                               </td>
                               <td data-label="Price">
                                 {getCurrencyLabel(val.linePrice, "-")}
                               </td>
                               <td data-label="Notes">
-                                {val.lineNote == "" ? "-" : val.lineNote}
+                                {val.lineNote === "" ? "-" : val.lineNote}
                               </td>
                               <td>
                                 <div className="row-actions">
