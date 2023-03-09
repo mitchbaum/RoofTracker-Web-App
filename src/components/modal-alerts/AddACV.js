@@ -161,13 +161,14 @@ const AddACV = ({
               defaultValue={price !== "" ? price * 1 : price}
               prefix="$"
               decimalsLimit={2}
+              decimalSeparator="."
               onValueChange={(value) => setPrice(value)}
             />
           </div>
           <div className="input-group">
             <label>Line Number</label>
             <input
-              type="number"
+              type="text"
               placeholder="Enter insurance line item number"
               value={lineNumber}
               onChange={(e) => setLineNumber(e.target.value)}

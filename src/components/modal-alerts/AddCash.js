@@ -162,6 +162,7 @@ const AddCash = ({
               defaultValue={price !== "" ? price * 1 : price}
               prefix="$"
               decimalsLimit={2}
+              decimalSeparator="."
               onValueChange={(value) => setPrice(value)}
             />
           </div>

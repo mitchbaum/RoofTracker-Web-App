@@ -176,6 +176,7 @@ const AddCheck = ({
               defaultValue={amount !== "" ? amount * 1 : amount}
               prefix="$"
               decimalsLimit={2}
+              decimalSeparator="."
               onValueChange={(value) => setAmount(value)}
             />
           </div>

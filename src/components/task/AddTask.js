@@ -20,9 +20,6 @@ const AddTask = ({ open, onClose, name, companyId }) => {
     setError("");
     // preventDefault means the form wont submit to a page
     e.preventDefault();
-    console.log(name);
-    console.log(companyId);
-
     if (!text) {
       setTextError(true);
       return;

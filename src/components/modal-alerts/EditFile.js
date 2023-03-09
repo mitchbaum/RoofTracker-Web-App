@@ -192,6 +192,7 @@ const EditFile = ({ open, onClose, data, fileId, uid, permission }) => {
               defaultValue={deductible !== "" ? deductible * 1 : deductible}
               prefix="$"
               decimalsLimit={2}
+              decimalSeparator="."
               onValueChange={(value) => setDeductible(value)}
               style={{ maxWidth: "none" }}
             />
@@ -207,6 +208,7 @@ const EditFile = ({ open, onClose, data, fileId, uid, permission }) => {
               defaultValue={coc !== "" ? coc * 1 : coc}
               prefix="$"
               decimalsLimit={2}
+              decimalSeparator="."
               onValueChange={(value) => setCoc(value)}
             />
           </div>
@@ -220,6 +222,7 @@ const EditFile = ({ open, onClose, data, fileId, uid, permission }) => {
               defaultValue={invoice !== "" ? invoice * 1 : invoice}
               prefix="$"
               decimalsLimit={2}
+              decimalSeparator="."
               onValueChange={(value) => setInvoice(value)}
             />
           </div>

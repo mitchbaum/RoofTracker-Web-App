@@ -175,6 +175,7 @@ const AddFile = ({ onAdd, open, onClose, uid, permission }) => {
                 placeholder="Enter deductible"
                 prefix="$"
                 decimalsLimit={2}
+                decimalSeparator="."
                 onValueChange={(value) => setDeductible(value)}
                 style={{ maxWidth: "none" }}
               />
@@ -189,6 +190,7 @@ const AddFile = ({ onAdd, open, onClose, uid, permission }) => {
                 placeholder="Enter coc"
                 prefix="$"
                 decimalsLimit={2}
+                decimalSeparator="."
                 onValueChange={(value) => setCoc(`${value}`)}
               />
             </div>
@@ -201,6 +203,7 @@ const AddFile = ({ onAdd, open, onClose, uid, permission }) => {
                 placeholder="Enter invoice"
                 prefix="$"
                 decimalsLimit={2}
+                decimalSeparator="."
                 onValueChange={(value) => setInvoice(`${value}`)}
               />
             </div>
