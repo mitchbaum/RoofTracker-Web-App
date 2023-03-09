@@ -384,7 +384,7 @@ const FileInformation = () => {
                 <div style={{ width: "1.5rem" }}></div>
                 <div className="left">
                   <p className="header-small">
-                    Insurance Checks Recieved ={" "}
+                    Insurance Payments Received by Homeowner ={" "}
                     {getCurrencyLabel(fileData.insCheckTotal, "$0.00")}
                   </p>
                   <div
@@ -441,7 +441,7 @@ const FileInformation = () => {
                     </table>
                   </div>
                   <p className="header-small">
-                    ACV Owed to Homeowner ={" "}
+                    ACV of Work Not Completed ={" "}
                     {getCurrencyLabel(fileData.acvItemTotal, "$0.00")}
                   </p>
                   <div
