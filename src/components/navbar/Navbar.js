@@ -21,7 +21,7 @@ const Navbar = () => {
   const [name, setName] = useState("");
   const [pic, setPic] = useState("");
   const [access, setAccess] = useState("");
-  const [company, setCompany] = useState(false);
+  const [company, setCompany] = useState("");
   const [companyId, setCompanyId] = useState("");
 
   // reverses the value of sidebar
@@ -42,6 +42,8 @@ const Navbar = () => {
       onSnapshot(doc(db, "Companies", `${companyId}`), (doc) => {
         setCompany(doc.data()?.name);
       });
+    } else {
+      setCompany("");
     }
   }, [companyId]);
 
