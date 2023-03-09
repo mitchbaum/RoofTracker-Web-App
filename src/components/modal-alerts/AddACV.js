@@ -167,7 +167,7 @@ const AddACV = ({
           <div className="input-group">
             <label>Line Number</label>
             <input
-              type="text"
+              type="number"
               placeholder="Enter insurance line item number"
               value={lineNumber}
               onChange={(e) => setLineNumber(e.target.value)}

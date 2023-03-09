@@ -165,6 +165,14 @@ const FileInformation = () => {
     }
   };
 
+  const convertToNumber = (line) => {
+    if (line.includes("-")) {
+      const splitString = line.split("-");
+      return splitString[0] * 1;
+    }
+    return line * 1;
+  };
+
   // const copyToClipboard = (e) => {
   //   var textField = document.createElement("textarea");
   //   textField.innerText =
@@ -393,6 +401,18 @@ const FileInformation = () => {
                       </tbody>
                       {allItemsData &&
                         allItemsData
+                          .sort((a, b) =>
+                            moment(
+                              a["checkDate"],
+                              "MMMM Do YYYY, h:mm:ss a"
+                            ).format() >
+                            moment(
+                              b["checkDate"],
+                              "MMMM Do YYYY, h:mm:ss a"
+                            ).format()
+                              ? 1
+                              : -1
+                          )
                           .filter((val) => {
                             if (
                               val.itemType === "Insurance" ||
@@ -438,6 +458,12 @@ const FileInformation = () => {
                       </tbody>
                       {allItemsData &&
                         allItemsData
+                          .sort((a, b) =>
+                            convertToNumber(a["lineNumber"]) >
+                            convertToNumber(b["lineNumber"])
+                              ? 1
+                              : -1
+                          )
                           .filter((val) => {
                             if (val.itemType === "ACV owed to HO") {
                               return val;
@@ -751,6 +777,18 @@ const FileInformation = () => {
                   </tbody>
                   {allItemsData &&
                     allItemsData
+                      .sort((a, b) =>
+                        moment(
+                          a["checkDate"],
+                          "MMMM Do YYYY, h:mm:ss a"
+                        ).format() >
+                        moment(
+                          b["checkDate"],
+                          "MMMM Do YYYY, h:mm:ss a"
+                        ).format()
+                          ? 1
+                          : -1
+                      )
                       .filter((val) => {
                         if (
                           val.itemType === "Insurance" ||
@@ -847,6 +885,12 @@ const FileInformation = () => {
                   </tbody>
                   {allItemsData &&
                     allItemsData
+                      .sort((a, b) =>
+                        convertToNumber(a["lineNumber"]) >
+                        convertToNumber(b["lineNumber"])
+                          ? 1
+                          : -1
+                      )
                       .filter((val) => {
                         if (val.itemType === "ACV owed to HO") {
                           return val;
@@ -930,6 +974,12 @@ const FileInformation = () => {
                   </tbody>
                   {allItemsData &&
                     allItemsData
+                      .sort((a, b) =>
+                        convertToNumber(a["lineNumber"]) >
+                        convertToNumber(b["lineNumber"])
+                          ? 1
+                          : -1
+                      )
                       .filter((val) => {
                         if (val.itemType === "RCV work to do") {
                           return val;
@@ -1015,6 +1065,12 @@ const FileInformation = () => {
                   </tbody>
                   {allItemsData &&
                     allItemsData
+                      .sort((a, b) =>
+                        convertToNumber(a["linePrice"]) >
+                        convertToNumber(b["linePrice"])
+                          ? 1
+                          : -1
+                      )
                       .filter((val) => {
                         if (val.itemType === "Cash work to do") {
                           return val;
