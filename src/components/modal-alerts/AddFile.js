@@ -231,7 +231,7 @@ const AddFile = ({ onAdd, open, onClose, uid, permission }) => {
 
             <div onChange={(event) => setType(event.target.value)}>
               <div className="input-group" style={{ display: "flex" }}>
-                <input name="status" value="Open" type="radio" />
+                <input name="status" value="Open" type="radio" defaultChecked />
                 <span style={{ display: "flex", alignItems: "center" }}>
                   Open
                 </span>

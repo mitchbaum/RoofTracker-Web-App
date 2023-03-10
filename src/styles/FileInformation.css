@@ -116,6 +116,10 @@
   margin: 5px 10px;
 }
 
+.tooltip:hover {
+  cursor: pointer;
+}
+
 @media screen and (max-width: 600px) {
   .top-two-card-container {
     display: block;

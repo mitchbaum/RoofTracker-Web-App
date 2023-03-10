@@ -222,6 +222,7 @@ const SignUp = () => {
                       name="organization"
                       value="independent"
                       type="radio"
+                      defaultChecked
                     />
                     <span style={{ display: "flex", alignItems: "center" }}>
                       Register as an independent

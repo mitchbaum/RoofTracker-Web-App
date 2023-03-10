@@ -3,7 +3,7 @@
 }
 
 .login-right-column {
-  height: 100vh;
+  /* height: 100%; */
   width: 40%;
   background-color: #1d2731;
 }
@@ -143,6 +143,12 @@
   margin-top: 1.5rem;
   width: 145px;
   margin-bottom: 2rem;
+}
+
+@media only screen and (min-height: 1000px) {
+  .login-right-column {
+    height: 100vh;
+  }
 }
 
 @media only screen and (max-width: 700px) {
