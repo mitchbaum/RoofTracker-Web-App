@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from "react";
-import { AiFillPrinter } from "react-icons/ai";
 import { FaCopy } from "react-icons/fa";
 import { BsPrinterFill } from "react-icons/bs";
 import { useParams } from "react-router-dom";
@@ -7,6 +6,7 @@ import { FaTimes } from "react-icons/fa";
 import AddACV from "../components/modal-alerts/AddACV";
 import AddCash from "../components/modal-alerts/AddCash";
 import AddCheck from "../components/modal-alerts/AddCheck";
+import AddCredit from "../components/modal-alerts/AddCredit";
 import AddRCV from "../components/modal-alerts/AddRCV";
 import EditFile from "../components/modal-alerts/EditFile";
 import "../styles/FileInformation.css";
@@ -33,9 +33,12 @@ import "react-tooltip/dist/react-tooltip.css";
 const FileInformation = () => {
   const { uid, fileId } = useParams();
   const { user } = UserAuth();
+  const [adminAccess, setAdminAccess] = useState("");
+  const [signedInAs, setSignedInAs] = useState("");
 
   const [fileData, setFileData] = useState([]);
   const [salesRep, setSalesRep] = useState("");
+  const [companyId, setCompanyId] = useState("");
   const [allItemsData, setAllItemsData] = useState([]);
   const [itemData, setItemData] = useState([]);
 
@@ -48,10 +51,13 @@ const FileInformation = () => {
   const [showSummary, setShowSummary] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
   const [showAddCheck, setShowAddCheck] = useState(false);
+  const [showAddCredit, setShowAddCredit] = useState(false);
+  const [creditItemTotal, setCreditItemTotal] = useState(0.0);
   const [showAddACV, setShowAddACV] = useState(false);
   const [showAddRCV, setShowAddRCV] = useState(false);
   const [showAddCash, setShowAddCash] = useState(false);
   const [permission, setPermission] = useState("");
+  const [missingFundsSwitch, setMissingFundsSwitch] = useState(false);
 
   const [text, setText] = useState("");
 
@@ -64,6 +70,8 @@ const FileInformation = () => {
   useEffect(() => {
     onSnapshot(doc(db, "Users", `${user.uid}`), (doc) => {
       setPermission(doc.data()?.permission);
+      setAdminAccess(doc.data()?.access);
+      setSignedInAs(doc.data()?.name);
     });
     onSnapshot(doc(db, `Users/${uid}/Files/${fileId}`), (doc) => {
       if (doc.data() === undefined) {
@@ -74,9 +82,11 @@ const FileInformation = () => {
       }
       setFileData(doc.data());
       setShowEdit(false);
+      setMissingFundsSwitch(doc.data()?.missingFundsSwitch);
     });
     onSnapshot(doc(db, `Users/${uid}`), (doc) => {
       setSalesRep(doc.data()?.name);
+      setCompanyId(doc.data()?.companyId);
     });
     onSnapshot(
       collection(db, `Users/${uid}/Files/${fileId}/FileInformation`),
@@ -99,6 +109,7 @@ const FileInformation = () => {
         setShowAddACV(false);
         setShowAddRCV(false);
         setShowAddCash(false);
+        setShowAddCredit(false);
         setShowAlert(false);
       }
     );
@@ -117,6 +128,7 @@ const FileInformation = () => {
     let insCheckTotal = 0.0;
     let ACVItemTotal = 0.0;
     let cashItemTotal = 0.0;
+    let creditItemTotal = 0.0;
     let pymtCheckTotal = 0.0;
     let RCVItemTotal = 0.0;
     data.forEach((item) => {
@@ -128,17 +140,22 @@ const FileInformation = () => {
         RCVItemTotal += item.linePrice * 1;
       } else if (item.itemType === "Cash work to do") {
         cashItemTotal += item.linePrice * 1;
+      } else if (item.itemType === "Credit") {
+        creditItemTotal += item.linePrice * 1;
       }
       if (item.itemType === "Personal" || item.itemType === "Insurance PAID") {
         pymtCheckTotal += item.checkAmount * 1;
       }
     });
 
+    setCreditItemTotal(creditItemTotal);
+
     updateDoc(doc(db, `Users/${uid}/Files/${fileId}`), {
       insCheckTotal: `${insCheckTotal}`,
       acvItemTotal: `${ACVItemTotal}`,
       insCheckACVTotal: `${ACVItemTotal - insCheckTotal}`,
       cashItemTotal: `${cashItemTotal}`,
+      creditItemTotal: `${creditItemTotal}`,
       pymtCheckTotal: `${pymtCheckTotal}`,
       rcvItemTotal: `${RCVItemTotal}`,
     });
@@ -200,13 +217,15 @@ const FileInformation = () => {
               uid={uid}
               amount={itemAmount}
               permission={permission}
+              itemData={itemData}
+              companyId={companyId}
             />
           )}
           {showAlert && (
             <AreYouSure
               fileData={fileData}
               open={showAlert}
-              onClose={() => setShowAlert(false)}
+              onClose={setShowAlert}
               action={action}
               uid={uid}
               itemData={itemData}
@@ -254,6 +273,18 @@ const FileInformation = () => {
             <AddCash
               onClose={() => setShowAddCash(false)}
               open={showAddCash}
+              modify={text}
+              uid={uid}
+              fileId={fileId}
+              itemData={itemData}
+              permission={permission}
+              authUserId={user.uid}
+            />
+          )}
+          {showAddCredit && (
+            <AddCredit
+              onClose={() => setShowAddCredit(false)}
+              open={showAddCredit}
               modify={text}
               uid={uid}
               fileId={fileId}
@@ -501,31 +532,51 @@ const FileInformation = () => {
                   <h1 className="header-large">File Information</h1>
                   <div className="filler"></div>
                   <div className="align-center">
-                    <button
-                      className="status-btn deactivate delete-file-media"
-                      onClick={() => {
-                        setShowAlert(!showAlert);
-                        setAction("Delete File");
-                      }}
-                    >
-                      Delete File
-                    </button>
+                    {adminAccess === "User" && signedInAs !== salesRep ? (
+                      <></>
+                    ) : (
+                      <button
+                        className="status-btn deactivate delete-file-media"
+                        onClick={() => {
+                          setShowAlert(!showAlert);
+                          setAction("Delete File");
+                        }}
+                      >
+                        Delete File
+                      </button>
+                    )}
                   </div>
                 </div>
                 {fileData.type === "Open" ? (
-                  <div
-                    style={{
-                      color: "#00c500",
-                      display: "flex",
-                      alignItems: "center",
-                      marginTop: "1rem",
-                    }}
-                  >
-                    <div className="circle active"></div>
-                    Open
-                  </div>
+                  <>
+                    <div
+                      style={{
+                        color: "#00c500",
+                        display: "flex",
+                        alignItems: "center",
+                        marginTop: "1rem",
+                      }}
+                    >
+                      <div className="circle active"></div>
+                      Open
+                      {missingFundsSwitch && (
+                        <span style={{ margin: "none" }} className="flag-label">
+                          In Pursuit of Missing Funds
+                        </span>
+                      )}
+                    </div>
+                  </>
                 ) : (
-                  <div style={{ marginTop: "1rem" }}>Closed</div>
+                  <>
+                    <div style={{ marginTop: "1rem" }}>
+                      Closed
+                      {missingFundsSwitch && (
+                        <span style={{ margin: "none" }} className="flag-label">
+                          In Pursuit of Missing Funds
+                        </span>
+                      )}
+                    </div>
+                  </>
                 )}
               </div>
 
@@ -559,14 +610,26 @@ const FileInformation = () => {
                       >
                         Show Summary
                       </button>
-                      <button
-                        className="status-btn security-access show-summary-btn"
-                        onClick={() => setShowEdit(!showEdit)}
-                      >
-                        Edit File
-                      </button>
+                      {adminAccess === "User" && signedInAs !== salesRep ? (
+                        <></>
+                      ) : (
+                        <button
+                          className="status-btn security-access show-summary-btn"
+                          onClick={() => setShowEdit(!showEdit)}
+                        >
+                          Edit File
+                        </button>
+                      )}
                     </div>
                   </div>
+                  {creditItemTotal !== 0.0 && (
+                    <div className="label-message-container flag-label">
+                      <p>Credit</p>
+                      <p className="FI-message">
+                        {getCurrencyLabel(`${creditItemTotal}`, "")}
+                      </p>
+                    </div>
+                  )}
                   <div className="label-message-container">
                     {fileData.cocSwitch ? (
                       <p style={{ textDecoration: "underline" }}>
@@ -581,9 +644,30 @@ const FileInformation = () => {
                     </p>
                   </div>
                   <div className="label-message-container">
-                    <p>Invoice Total</p>
+                    {creditItemTotal !== 0.0 && fileData.invoice !== "" ? (
+                      <p>
+                        Invoice Total
+                        <span
+                          className="FI-message"
+                          style={{ color: "#d30b0e" }}
+                        >
+                          (Invoice - Credit)
+                        </span>
+                      </p>
+                    ) : (
+                      <p>Invoice Total</p>
+                    )}
                     <p className="FI-message">
-                      {getCurrencyLabel(fileData.invoice, "")}
+                      {creditItemTotal !== 0.0 && fileData.invoice !== "" ? (
+                        <>
+                          {getCurrencyLabel(
+                            `${fileData.invoice * 1 - creditItemTotal}`,
+                            ""
+                          )}
+                        </>
+                      ) : (
+                        <>{getCurrencyLabel(fileData.invoice, "")}</>
+                      )}
                     </p>
                   </div>
                   <div className="label-message-container">
@@ -721,44 +805,51 @@ const FileInformation = () => {
               <div className="header">
                 <div className="flex-space-between align-bottom">
                   <p className="header-small">Checks</p>
-                  <div style={{ display: "flex" }}>
-                    <span
-                      className="tooltip"
-                      data-tooltip-id="tooltip"
-                      // data-tooltip-content='<br /> Paid to Company marked as "Yes" means that the check has been collected.<br /><br />Mark as "No" if the check has not been collected yet. <br />.'
-                    >
-                      ?
-                    </span>
-                    <Tooltip
-                      id="tooltip"
-                      style={{
-                        backgroundColor: "#f5f5f5",
-                        fontWeight: "300",
-                        color: "#222",
-                      }}
-                    >
-                      <div style={{ display: "flex", flexDirection: "column" }}>
-                        <span>
-                          Paid to Company marked as "Yes" means that the check
-                          has been collected.
-                        </span>
-                        <span>
-                          Mark as "No" if the check has not been collected yet.{" "}
-                        </span>
-                      </div>
-                    </Tooltip>
-                    <button
-                      className="status-btn security-access show-summary-btn"
-                      onClick={() => {
-                        setShowAddCheck(!showAddCheck);
-                        setText("Add");
-                        setItemData("");
-                      }}
-                      style={{ margin: "0", width: "110px" }}
-                    >
-                      Add Check
-                    </button>
-                  </div>
+                  {adminAccess === "User" && signedInAs !== salesRep ? (
+                    <></>
+                  ) : (
+                    <div style={{ display: "flex" }}>
+                      <span
+                        className="tooltip"
+                        data-tooltip-id="tooltip"
+                        // data-tooltip-content='<br /> Paid to Company marked as "Yes" means that the check has been collected.<br /><br />Mark as "No" if the check has not been collected yet. <br />.'
+                      >
+                        ?
+                      </span>
+                      <Tooltip
+                        id="tooltip"
+                        style={{
+                          backgroundColor: "#f5f5f5",
+                          fontWeight: "300",
+                          color: "#222",
+                        }}
+                      >
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <span>
+                            Paid to Company marked as "Yes" means that the check
+                            has been collected.
+                          </span>
+                          <span>
+                            Mark as "No" if the check has not been collected
+                            yet.{" "}
+                          </span>
+                        </div>
+                      </Tooltip>
+                      <button
+                        className="status-btn security-access show-summary-btn"
+                        onClick={() => {
+                          setShowAddCheck(!showAddCheck);
+                          setText("Add");
+                          setItemData("");
+                        }}
+                        style={{ margin: "0", width: "110px" }}
+                      >
+                        Add Check
+                      </button>
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="table-container">
@@ -827,26 +918,31 @@ const FileInformation = () => {
                                   : "No"}
                               </td>
                               <td>
-                                <div className="row-actions">
-                                  <p
-                                    onClick={() => {
-                                      setShowAddCheck(!showAddCheck);
-                                      setText("Edit");
-                                      setItemData(val);
-                                    }}
-                                    className="edit"
-                                  >
-                                    Edit
-                                  </p>
-                                  <FaTimes
-                                    className="btn-animation center delete"
-                                    onClick={() => {
-                                      setShowAlert(!showAlert);
-                                      setAction("Delete Check");
-                                      setItemData(val);
-                                    }}
-                                  />
-                                </div>
+                                {adminAccess === "User" &&
+                                signedInAs !== salesRep ? (
+                                  <></>
+                                ) : (
+                                  <div className="row-actions">
+                                    <p
+                                      onClick={() => {
+                                        setShowAddCheck(!showAddCheck);
+                                        setText("Edit");
+                                        setItemData(val);
+                                      }}
+                                      className="edit"
+                                    >
+                                      Edit
+                                    </p>
+                                    <FaTimes
+                                      className="btn-animation center delete"
+                                      onClick={() => {
+                                        setShowAlert(!showAlert);
+                                        setAction("Delete Check");
+                                        setItemData(val);
+                                      }}
+                                    />
+                                  </div>
+                                )}
                               </td>
                             </tr>
                           </tbody>
@@ -857,17 +953,21 @@ const FileInformation = () => {
               <div className="header">
                 <div className="flex-space-between align-bottom">
                   <p className="header-small">ACV Owed to Homeowner</p>
-                  <button
-                    className="status-btn security-access show-summary-btn"
-                    onClick={() => {
-                      setShowAddACV(!showAddACV);
-                      setText("Add");
-                      setItemData("");
-                    }}
-                    style={{ margin: "0", width: "110px" }}
-                  >
-                    Add ACV
-                  </button>
+                  {adminAccess === "User" && signedInAs !== salesRep ? (
+                    <></>
+                  ) : (
+                    <button
+                      className="status-btn security-access show-summary-btn"
+                      onClick={() => {
+                        setShowAddACV(!showAddACV);
+                        setText("Add");
+                        setItemData("");
+                      }}
+                      style={{ margin: "0", width: "110px" }}
+                    >
+                      Add ACV
+                    </button>
+                  )}
                 </div>
               </div>
               <div className="table-container">
@@ -916,26 +1016,31 @@ const FileInformation = () => {
                                 {val.lineNote === "" ? "-" : val.lineNote}
                               </td>
                               <td>
-                                <div className="row-actions">
-                                  <p
-                                    onClick={() => {
-                                      setShowAddACV(!showAddACV);
-                                      setText("Edit");
-                                      setItemData(val);
-                                    }}
-                                    className="edit"
-                                  >
-                                    Edit
-                                  </p>
-                                  <FaTimes
-                                    className="btn-animation center delete"
-                                    onClick={() => {
-                                      setShowAlert(!showAlert);
-                                      setAction("Delete ACV Item");
-                                      setItemData(val);
-                                    }}
-                                  />
-                                </div>
+                                {adminAccess === "User" &&
+                                signedInAs !== salesRep ? (
+                                  <></>
+                                ) : (
+                                  <div className="row-actions">
+                                    <p
+                                      onClick={() => {
+                                        setShowAddACV(!showAddACV);
+                                        setText("Edit");
+                                        setItemData(val);
+                                      }}
+                                      className="edit"
+                                    >
+                                      Edit
+                                    </p>
+                                    <FaTimes
+                                      className="btn-animation center delete"
+                                      onClick={() => {
+                                        setShowAlert(!showAlert);
+                                        setAction("Delete ACV Item");
+                                        setItemData(val);
+                                      }}
+                                    />
+                                  </div>
+                                )}
                               </td>
                             </tr>
                           </tbody>
@@ -946,17 +1051,21 @@ const FileInformation = () => {
               <div className="header">
                 <div className="flex-space-between align-bottom">
                   <p className="header-small">RCV Work to do</p>
-                  <button
-                    className="status-btn security-access show-summary-btn"
-                    onClick={() => {
-                      setShowAddRCV(!showAddRCV);
-                      setText("Add");
-                      setItemData("");
-                    }}
-                    style={{ margin: "0", width: "110px" }}
-                  >
-                    Add RCV
-                  </button>
+                  {adminAccess === "User" && signedInAs !== salesRep ? (
+                    <></>
+                  ) : (
+                    <button
+                      className="status-btn security-access show-summary-btn"
+                      onClick={() => {
+                        setShowAddRCV(!showAddRCV);
+                        setText("Add");
+                        setItemData("");
+                      }}
+                      style={{ margin: "0", width: "110px" }}
+                    >
+                      Add RCV
+                    </button>
+                  )}
                 </div>
               </div>
               <div className="table-container">
@@ -1005,26 +1114,31 @@ const FileInformation = () => {
                                 {val.lineNote === "" ? "-" : val.lineNote}
                               </td>
                               <td>
-                                <div className="row-actions">
-                                  <p
-                                    onClick={() => {
-                                      setShowAddRCV(!showAddRCV);
-                                      setText("Edit");
-                                      setItemData(val);
-                                    }}
-                                    className="edit"
-                                  >
-                                    Edit
-                                  </p>
-                                  <FaTimes
-                                    className="btn-animation center delete"
-                                    onClick={() => {
-                                      setShowAlert(!showAlert);
-                                      setAction("Delete RCV Item");
-                                      setItemData(val);
-                                    }}
-                                  />
-                                </div>
+                                {adminAccess === "User" &&
+                                signedInAs !== salesRep ? (
+                                  <></>
+                                ) : (
+                                  <div className="row-actions">
+                                    <p
+                                      onClick={() => {
+                                        setShowAddRCV(!showAddRCV);
+                                        setText("Edit");
+                                        setItemData(val);
+                                      }}
+                                      className="edit"
+                                    >
+                                      Edit
+                                    </p>
+                                    <FaTimes
+                                      className="btn-animation center delete"
+                                      onClick={() => {
+                                        setShowAlert(!showAlert);
+                                        setAction("Delete RCV Item");
+                                        setItemData(val);
+                                      }}
+                                    />
+                                  </div>
+                                )}
                               </td>
                             </tr>
                           </tbody>
@@ -1038,17 +1152,21 @@ const FileInformation = () => {
                     Cash Work to do ={" "}
                     {getCurrencyLabel(fileData.cashItemTotal, "-")}
                   </p>
-                  <button
-                    className="status-btn security-access show-summary-btn"
-                    onClick={() => {
-                      setShowAddCash(!showAddCash);
-                      setText("Add");
-                      setItemData("");
-                    }}
-                    style={{ margin: "0", width: "110px" }}
-                  >
-                    Add Cash
-                  </button>
+                  {adminAccess === "User" && signedInAs !== salesRep ? (
+                    <></>
+                  ) : (
+                    <button
+                      className="status-btn security-access show-summary-btn"
+                      onClick={() => {
+                        setShowAddCash(!showAddCash);
+                        setText("Add");
+                        setItemData("");
+                      }}
+                      style={{ margin: "0", width: "110px" }}
+                    >
+                      Add Cash
+                    </button>
+                  )}
                 </div>
               </div>
               <div className="table-container">
@@ -1093,26 +1211,125 @@ const FileInformation = () => {
                                 {val.lineNote === "" ? "-" : val.lineNote}
                               </td>
                               <td>
-                                <div className="row-actions">
-                                  <p
-                                    onClick={() => {
-                                      setShowAddCash(!showAddCash);
-                                      setText("Edit");
-                                      setItemData(val);
-                                    }}
-                                    className="edit"
-                                  >
-                                    Edit
-                                  </p>
-                                  <FaTimes
-                                    className="btn-animation center delete"
-                                    onClick={() => {
-                                      setShowAlert(!showAlert);
-                                      setAction("Delete Cash Item");
-                                      setItemData(val);
-                                    }}
-                                  />
-                                </div>
+                                {adminAccess === "User" &&
+                                signedInAs !== salesRep ? (
+                                  <></>
+                                ) : (
+                                  <div className="row-actions">
+                                    <p
+                                      onClick={() => {
+                                        setShowAddCash(!showAddCash);
+                                        setText("Edit");
+                                        setItemData(val);
+                                      }}
+                                      className="edit"
+                                    >
+                                      Edit
+                                    </p>
+                                    <FaTimes
+                                      className="btn-animation center delete"
+                                      onClick={() => {
+                                        setShowAlert(!showAlert);
+                                        setAction("Delete Cash Item");
+                                        setItemData(val);
+                                      }}
+                                    />
+                                  </div>
+                                )}
+                              </td>
+                            </tr>
+                          </tbody>
+                        );
+                      })}
+                </table>
+              </div>
+              <div className="header">
+                <div className="flex-space-between align-bottom">
+                  <p className="header-small">Credit Owed to Homeowner</p>
+                  {adminAccess === "User" && signedInAs !== salesRep ? (
+                    <></>
+                  ) : (
+                    <button
+                      className="status-btn security-access show-summary-btn"
+                      onClick={() => {
+                        setShowAddCredit(!showAddCredit);
+                        setText("Add");
+                        setItemData("");
+                      }}
+                      style={{ margin: "0", width: "110px" }}
+                    >
+                      Add Credit
+                    </button>
+                  )}
+                </div>
+              </div>
+              <div className="table-container">
+                <table style={{ tableLayout: "auto" }}>
+                  <tbody>
+                    <tr>
+                      <th style={{ paddingLeft: "10px", width: "30%" }}>
+                        Credit Title
+                      </th>
+                      <th style={{ width: "20%" }}>Amount</th>
+                      <th style={{ width: "50%" }}>Notes</th>
+                      <th></th>
+                    </tr>
+                  </tbody>
+                  {allItemsData &&
+                    allItemsData
+                      .sort((a, b) =>
+                        convertToNumber(a["linePrice"]) >
+                        convertToNumber(b["linePrice"])
+                          ? 1
+                          : -1
+                      )
+                      .filter((val) => {
+                        if (val.itemType === "Credit") {
+                          return val;
+                        }
+                      })
+                      .map((val, key) => {
+                        return (
+                          <tbody key={key}>
+                            <tr>
+                              <td
+                                data-label="Credit Title"
+                                style={{ paddingLeft: "10px" }}
+                              >
+                                {val.itemName === "" ? "-" : val.itemName}
+                              </td>
+                              <td data-label="Amount">
+                                {getCurrencyLabel(val.linePrice, "-")}
+                              </td>
+                              <td data-label="Notes">
+                                {val.lineNote === "" ? "-" : val.lineNote}
+                              </td>
+                              <td>
+                                {adminAccess === "User" &&
+                                signedInAs !== salesRep ? (
+                                  <></>
+                                ) : (
+                                  <div className="row-actions">
+                                    <p
+                                      onClick={() => {
+                                        setShowAddCredit(!showAddCredit);
+                                        setText("Edit");
+                                        setItemData(val);
+                                      }}
+                                      className="edit"
+                                    >
+                                      Edit
+                                    </p>
+                                    <FaTimes
+                                      className="btn-animation center delete"
+                                      onClick={() => {
+                                        setShowAlert(!showAlert);
+                                        setAction("Delete Credit");
+                                        setItemData(val);
+                                      }}
+                                    />
+                                  </div>
+                                )}
                               </td>
                             </tr>
                           </tbody>

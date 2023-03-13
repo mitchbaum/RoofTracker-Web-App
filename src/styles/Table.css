@@ -39,6 +39,13 @@ table td {
   padding-right: 10px;
 }
 
+.flag-row {
+  box-shadow: inset 5px 0 0 0 #d30b0e;
+}
+.flag-row-font-color {
+  color: #d30b0e;
+}
+
 .table-no-collapse {
   margin: 0;
   padding: 0;

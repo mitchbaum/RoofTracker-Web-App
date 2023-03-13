@@ -33,8 +33,7 @@ li {
   overflow: auto;
 }
 
-.permission {
-  margin: 1rem 15rem 2rem 15rem;
+.flag-label {
   font-size: 14px;
   border: 1px solid #d30b0e;
   border-radius: 5px;

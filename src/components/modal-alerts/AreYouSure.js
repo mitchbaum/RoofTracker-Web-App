@@ -17,6 +17,8 @@ const AreYouSure = ({
   itemData,
   permission,
   authUserId,
+  missingFunds,
+  missingFundsSwitch,
 }) => {
   const [error, setError] = useState("");
 
@@ -55,6 +57,18 @@ const AreYouSure = ({
       updateDoc(doc(db, "Users", uid), {
         access: "User",
       });
+    }
+    if (
+      (action === "Comfirm Missing Funds" && fileData.coc === "") ||
+      fileData.deductible === ""
+    ) {
+      return onClose(false);
+    } else if (action == "Comfirm Missing Funds" && !missingFundsSwitch) {
+      missingFunds(true);
+      return onClose(false);
+    } else if (action == "Comfirm Missing Funds" && missingFundsSwitch) {
+      missingFunds(false);
+      return onClose(false);
     }
     if (action == "Delete File") {
       const storageRef = ref(storage, `${uid}/${fileData.id}.png`);
@@ -145,6 +159,23 @@ const AreYouSure = ({
           console.log(error);
         });
     }
+    if (action == "Delete Credit") {
+      if (permission === "view" && authUserId !== uid) {
+        return setError("Unable to delete credit item. You are a viewer");
+      }
+      await deleteDoc(
+        doc(
+          db,
+          `Users/${uid}/Files/${fileData.id}/FileInformation/${itemData.id}`
+        )
+      )
+        .then(() => {
+          return;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
     updateDoc(doc(db, `Users/${uid}/Files/${fileData.id}`), {
       timeStamp: getFromattedDate,
       modified: serverTimestamp(),
@@ -154,12 +185,13 @@ const AreYouSure = ({
   };
 
   const getCurrencyLabel = (data, placeholder) => {
-    if (data == "") {
+    if (data === "") {
       return placeholder;
     } else {
-      return (
-        "$" + (data * 1).toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1,")
-      );
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(data * 1);
     }
   };
 
@@ -172,8 +204,12 @@ const AreYouSure = ({
         animate="visible"
         exit="exit"
       >
-        <h1 className="header-large">Are you sure?</h1>
-        {action == "Delete File" && (
+        <h1 className="header-large">
+          {action === "Comfirm Missing Funds"
+            ? "Verify Missing Funds"
+            : "Are you sure?"}
+        </h1>
+        {action === "Delete File" && (
           <p
             className="error-message"
             style={{ color: "#676767", display: "block" }}
@@ -181,7 +217,7 @@ const AreYouSure = ({
             This file will not be recoverable
           </p>
         )}
-        {action == "Delete Check" && (
+        {action === "Delete Check" && (
           <>
             <p
               className="error-message"
@@ -249,17 +285,97 @@ const AreYouSure = ({
             </p>
           </>
         )}
-
+        {action == "Delete Credit" && (
+          <>
+            <p
+              className="error-message"
+              style={{ color: "#676767", display: "block" }}
+            >
+              Credit title:{" "}
+              <span className="FI-message">{itemData.itemName}</span>
+            </p>
+            <p
+              className="error-message"
+              style={{ color: "#676767", display: "block" }}
+            >
+              Amount:{" "}
+              <span className="FI-message">
+                {getCurrencyLabel(itemData.linePrice, "$0.00")}
+              </span>
+            </p>
+          </>
+        )}
+        {action === "Comfirm Missing Funds" &&
+          fileData.coc !== "" &&
+          fileData.deductible !== "" && (
+            <>
+              {missingFundsSwitch ? (
+                <p
+                  style={{
+                    fontWeight: "300",
+                    color: "#222",
+                    marginTop: "0.5rem",
+                  }}
+                >
+                  Remove missing funds flag from file?
+                </p>
+              ) : (
+                <>
+                  <p
+                    style={{
+                      fontWeight: "300",
+                      color: "#222",
+                      marginTop: "0.5rem",
+                    }}
+                  >
+                    Is this the correct amount missing that will be pursued to
+                    collect?
+                  </p>
+                  <p
+                    className="error-message"
+                    style={{ color: "#676767", display: "block" }}
+                  >
+                    Insurance Still Owes Homeowner:{" "}
+                    <span className="FI-message">
+                      {getCurrencyLabel(
+                        `${
+                          fileData.coc * 1 +
+                          fileData.insCheckACVTotal * 1 -
+                          fileData.deductible * 1
+                        }`,
+                        "$0.00"
+                      )}
+                    </span>
+                  </p>
+                </>
+              )}
+            </>
+          )}
+        {(action === "Comfirm Missing Funds" && fileData.coc === "") ||
+          (fileData.deductible === "" && (
+            <p
+              style={{
+                fontWeight: "300",
+                color: "#222",
+                marginTop: "0.5rem",
+              }}
+            >
+              No missing funds detected. Could not calculate due to missing
+              Deductible and COC.
+            </p>
+          ))}
         <button
           className="status-btn deactivate "
           onClick={handleSubmit}
-          style={{ marginLeft: "0", marginTop: "1rem" }}
+          style={{ marginLeft: "0", marginTop: "1rem", width: "150px" }}
         >
-          {action}
+          {action === "Comfirm Missing Funds" ? "Confirm" : action}
         </button>
         <button
           className="status-btn security-access show-summary-btn"
-          onClick={onClose}
+          onClick={() => {
+            onClose(false);
+          }}
           style={{ marginTop: "0" }}
         >
           Cancel
