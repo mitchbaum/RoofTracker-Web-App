@@ -257,14 +257,16 @@ const Settings = () => {
                     <img className="profile-pic" src={pic}></img>
                   )}
                 </div>
-                <div className="middle-column">
+                <div className="middle-details-column">
                   <p className="role">
                     {" "}
                     {company == "" ? "Independent" : access}{" "}
                   </p>
-
-                  <p className="name">{name}</p>
-                  <p className="email">{email}</p>
+                  <div>
+                    <p className="name">{name}</p>
+                    <p className="email">{email}</p>
+                  </div>
+                  <div></div>
                 </div>
 
                 <ul className="button-container">

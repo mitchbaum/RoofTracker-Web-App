@@ -28,11 +28,24 @@ li {
   border: 2px black solid;
 }
 
+.middle-details-column {
+  display: flex;
+  padding: 1rem;
+  width: 100%;
+  overflow: auto;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
 .middle-column {
   width: 100%;
   overflow: auto;
 }
 
+.missing-funds-container {
+  display: flex;
+  align-items: center;
+}
 .flag-label {
   font-size: 14px;
   border: 1px solid #d30b0e;
@@ -43,7 +56,6 @@ li {
 }
 
 .role {
-  margin: 1.5rem 0rem 0 1rem;
   font-size: 12px;
   border: 0.7px solid #1d2731;
   border-radius: 5px;
@@ -59,12 +71,10 @@ li {
 }
 
 .name {
-  margin: 1rem 0 0 1rem;
   font-size: 18px;
 }
 
 .email {
-  margin: 0.5rem 0 0 1rem;
   font-size: 12px;
   color: darkgrey;
 }
@@ -192,5 +202,10 @@ input[type="file"]::file-selector-button:hover {
 
   .name {
     margin: 1rem 0 0 0.5rem;
+  }
+
+  .missing-funds-container {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

@@ -39,6 +39,7 @@ const UserDetails = () => {
   const [access, setAccess] = useState("");
   const [permission, setPermission] = useState("");
   const [email, setEmail] = useState("");
+  const [missingFundsTotal, setMissingFundsTotal] = useState(0.0);
   const [filterBy, setFilterBy] = useState("Open");
   const [filesData, setFilesData] = useState([]);
 
@@ -54,6 +55,7 @@ const UserDetails = () => {
       setPic(doc.data()?.["profile pic url"]);
       setAccess(doc.data()?.access);
       setEmail(doc.data()?.email);
+      setMissingFundsTotal(doc.data()?.missingFundsTotal);
       setIsPending(false);
       setShowAlert(false);
     });
@@ -158,14 +160,33 @@ const UserDetails = () => {
                 <img className="profile-pic" src={pic}></img>
               )}
             </div>
-            <div className="middle-column">
+            <div className="middle-details-column">
               {access !== "Inactive" ? (
                 <p className="role"> {access} </p>
               ) : (
                 <p className="role inactive"> Inactive </p>
               )}
-              <p className="name">{name}</p>
-              <p className="email">{email}</p>
+
+              <div>
+                <p className="name">{name}</p>
+                <p className="email">{email}</p>
+              </div>
+
+              {missingFundsTotal !== 0.0 ? (
+                <>
+                  <div className="missing-funds-container">
+                    <div className="flag-label" style={{ fontSize: "16px" }}>
+                      {getCurrencyLabel(`${missingFundsTotal}`, "")}
+                    </div>
+                    <span style={{ marginLeft: "8px" }}>
+                      {" "}
+                      in Missing Funds Found
+                    </span>
+                  </div>
+                </>
+              ) : (
+                <div></div>
+              )}
             </div>
             {uid !== user?.uid &&
             adminAccess === "Superadmin" &&
@@ -319,6 +340,7 @@ const UserDetails = () => {
                   </option>
                 </select>
               </div>
+              <div style={{ width: "2rem" }}></div>
               {adminAccess !== "User" && (
                 <button
                   className="status-btn security-access show-summary-btn"
