@@ -44,16 +44,12 @@ const Team = () => {
     onSnapshot(doc(db, "Users", `${user?.uid}`), (doc) => {
       setCompanyId(doc.data()?.companyId);
       setAccess(doc.data()?.access);
-      console.log(didMount);
     });
   }, [user?.uid]);
 
   useEffect(() => {
-    if (didMount === false && access !== "User" && access !== "Inactive") {
-      console.log(filterBy);
+    if (didMount === false && access !== "Inactive") {
       fetchTeam(companyId, filterBy);
-
-      console.log("useEffect");
     }
   }, [companyId, filterBy]);
 
