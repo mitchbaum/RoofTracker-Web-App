@@ -357,10 +357,10 @@ function Home() {
                       <tr>
                         <th style={{ paddingLeft: "10px", width: "10%" }}></th>
                         <th style={{ width: "22%" }}>Name</th>
-                        <th style={{ width: "10%" }}>Final COC</th>
                         <th style={{ width: "20%" }}>
                           Insurance Still Owes HO
                         </th>
+                        <th style={{ width: "10%" }}>Final COC</th>
                         <th style={{ width: "15%" }}>Modified</th>
                         <th style={{ width: "15%" }}>Owner</th>
                         <th>Job Status</th>
@@ -400,7 +400,13 @@ function Home() {
                               className="table-cells-container"
                               key={key}
                             >
-                              <tr>
+                              <tr
+                                className={
+                                  val.missingFundsSwitch
+                                    ? "flag-row"
+                                    : undefined
+                                }
+                              >
                                 <td style={{ padding: "15px" }}>
                                   <img
                                     className="file-image"
@@ -414,14 +420,14 @@ function Home() {
                                 <td data-label="Name">
                                   {val.name !== "" ? val.name : "-"}
                                 </td>
-                                <td data-label="Final COC?">
-                                  {val.cocSwitch ? (
-                                    <div>Yes</div>
-                                  ) : (
-                                    <div>No</div>
-                                  )}
-                                </td>
-                                <td data-label="Insurance Still Owes HO">
+                                <td
+                                  data-label="Insurance Still Owes HO"
+                                  className={
+                                    val.missingFundsSwitch
+                                      ? "flag-row-font-color"
+                                      : undefined
+                                  }
+                                >
                                   {val.coc !== "" && val.deductible !== ""
                                     ? getCurrencyLabel(
                                         `${
@@ -433,6 +439,14 @@ function Home() {
                                       )
                                     : "N/A"}
                                 </td>
+                                <td data-label="s">
+                                  {val.cocSwitch ? (
+                                    <div>Yes</div>
+                                  ) : (
+                                    <div>No</div>
+                                  )}
+                                </td>
+
                                 <td data-label="Modified">
                                   {getDateLabel(val.timeStamp, "-")}
                                 </td>

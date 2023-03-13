@@ -46,10 +46,10 @@ const MyFiles = () => {
   useEffect(() => {
     const q = query(
       collection(db, `Users/${user?.uid}/Files`),
-      where("type", "==", filterBy)
+      where("type", "==", filterBy),
+      orderBy("modified", "desc")
     );
     onSnapshot(q, (querySnapshot) => {
-      //console.log(querySnapshot.docs);
       fetchFiles(
         querySnapshot.docs.map(
           (doc) => ({
@@ -164,7 +164,7 @@ const MyFiles = () => {
               <table style={{ tableLayout: "auto" }}>
                 <tbody>
                   <tr>
-                    <th style={{ paddingLeft: "10px", width: "10%" }}></th>
+                    <th style={{ width: "10%" }}></th>
                     <th style={{ width: "20%" }}>Name</th>
                     <th style={{ width: "30%" }}>
                       Insurance Still Owes Homeowner
@@ -214,7 +214,7 @@ const MyFiles = () => {
                           className="table-cells-container"
                           key={key}
                         >
-                          <tr>
+                          <tr className={val.missingFundsSwitch && "flag-row"}>
                             <td style={{ padding: "15px" }}>
                               <img
                                 className="file-image"
@@ -228,7 +228,12 @@ const MyFiles = () => {
                             <td data-label="Name">
                               {val.name !== "" ? val.name : "-"}
                             </td>
-                            <td data-label="Insurance Still Owes HO">
+                            <td
+                              data-label="Insurance Still Owes HO"
+                              className={
+                                val.missingFundsSwitch && "flag-row-font-color"
+                              }
+                            >
                               {val.coc !== "" && val.deductible !== ""
                                 ? getCurrencyLabel(
                                     `${
@@ -240,7 +245,7 @@ const MyFiles = () => {
                                   )
                                 : "Not available"}
                             </td>
-                            <td data-label="Final COC?">
+                            <td data-label="Final COC">
                               {val.cocSwitch ? <div>Yes</div> : <div>No</div>}
                             </td>
                             <td data-label="Job Status">
