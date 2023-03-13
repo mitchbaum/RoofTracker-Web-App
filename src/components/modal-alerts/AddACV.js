@@ -74,7 +74,6 @@ const AddACV = ({
           checkAmount: "",
           checkDate: "",
           fileId: fileId,
-          insCheckCounter: 0,
           itemName: name,
           itemType: "ACV owed to HO",
           lineNote: note,

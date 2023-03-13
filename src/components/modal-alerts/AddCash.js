@@ -77,7 +77,6 @@ const AddCash = ({
           checkAmount: "",
           checkDate: "",
           fileId: fileId,
-          insCheckCounter: 0,
           itemName: name,
           itemType: "Cash work to do",
           lineNote: note,

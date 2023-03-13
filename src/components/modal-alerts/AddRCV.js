@@ -74,7 +74,6 @@ const AddRCV = ({
           checkAmount: "",
           checkDate: "",
           fileId: fileId,
-          insCheckCounter: 0,
           itemName: name,
           itemType: "RCV work to do",
           lineNote: note,
