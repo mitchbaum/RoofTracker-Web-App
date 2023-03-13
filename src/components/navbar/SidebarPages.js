@@ -40,6 +40,27 @@ export const UserSidebarPages = [
     className: "nav-text",
   },
   {
+    title: "Team",
+    path: "/team",
+    icon: <IoMdPeople />,
+    className: "nav-text",
+  },
+  {
+    title: "Settings",
+    path: "/settings",
+    icon: <AiFillSetting />,
+    className: "nav-text",
+  },
+];
+
+export const IndependentSidebarPages = [
+  {
+    title: "My Files",
+    path: "/my-files",
+    icon: <BsFillFolderFill />,
+    className: "nav-text",
+  },
+  {
     title: "Settings",
     path: "/settings",
     icon: <AiFillSetting />,

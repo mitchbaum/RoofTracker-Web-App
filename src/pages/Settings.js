@@ -54,6 +54,7 @@ const Settings = () => {
 
   const [joinCompany, setJoinCompany] = useState("");
   const [joinCompanyCode, setJoinCompanyCode] = useState("");
+  const [companies, setCompanies] = useState([]);
 
   useEffect(() => {
     onSnapshot(doc(db, "Users", `${user?.uid}`), (doc) => {
@@ -79,6 +80,7 @@ const Settings = () => {
         setCode(doc.data()?.code);
       });
     }
+    fetchCompanies();
   }, [companyId]);
 
   const handleResetPassword = async (e) => {
@@ -209,6 +211,16 @@ const Settings = () => {
     return setSaveMessage("Unable to save. Double check your entry");
   };
 
+  const fetchCompanies = async () => {
+    const postData = [];
+    const querySnapshot = await getDocs(collection(db, "Companies"));
+    querySnapshot.forEach((doc) => {
+      // doc.data() is never undefined for query doc snapshots
+      postData.push(doc.data().name);
+    });
+    setCompanies(postData);
+  };
+
   return (
     <>
       {user && access !== "Inactive" ? (
@@ -228,7 +240,10 @@ const Settings = () => {
           ) : (
             <>
               {permission === "view" && (
-                <div className="permission">
+                <div
+                  style={{ margin: "1rem 15rem 2rem 15rem" }}
+                  className="flag-label"
+                >
                   You only have viewing permissions. You will not be able to
                   edit files or users until this is changed. Talk to Mitch for
                   help.
@@ -360,7 +375,7 @@ const Settings = () => {
                       style={{ marginTop: "-1.5rem" }}
                     >
                       <div className="header">
-                        <p className="header-small">Register A Company</p>
+                        <p className="header-small">Register a Company</p>
                       </div>
                     </div>
                   </div>
@@ -413,23 +428,29 @@ const Settings = () => {
                       style={{ marginTop: "-1.5rem" }}
                     >
                       <div className="header">
-                        <p className="header-small">Join A Company</p>
+                        <p className="header-small">Join a Company</p>
                       </div>
                     </div>
                   </div>
 
                   <div className="account-info-container">
                     <div className="input-group" style={{ margin: "1.5rem" }}>
-                      <label htmlFor="name">Company name</label>
-                      <input
-                        type="text"
-                        name="company-name"
-                        placeholder="Enter company name"
-                        onChange={(e) => {
-                          setIsEditing(true);
-                          setJoinCompany(e.target.value);
-                        }}
-                      />
+                      <label>Company</label>
+                      <select
+                        value={joinCompany}
+                        onChange={(e) => setJoinCompany(e.target.value)}
+                        style={{ width: "100%" }}
+                      >
+                        <option disabled={true} value="">
+                          Select a company...
+                        </option>
+                        {companies &&
+                          companies.map((val, key) => (
+                            <option key={key} value={val}>
+                              {val}
+                            </option>
+                          ))}
+                      </select>
                     </div>
                     <div className="input-group" style={{ margin: "1.5rem" }}>
                       <label htmlFor="reg-code">registration code</label>

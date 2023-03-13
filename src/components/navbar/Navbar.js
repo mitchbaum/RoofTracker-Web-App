@@ -4,7 +4,11 @@ import { AiOutlineClose } from "react-icons/ai";
 import { MdAccountCircle } from "react-icons/md";
 
 import { Link, useNavigate } from "react-router-dom";
-import { SuperAdminSidebarPages, UserSidebarPages } from "./SidebarPages";
+import {
+  SuperAdminSidebarPages,
+  UserSidebarPages,
+  IndependentSidebarPages,
+} from "./SidebarPages";
 import "./Navbar.css";
 import { IconContext } from "react-icons/lib";
 import Logo from "../../logo/RT-logo-gradient.png";
@@ -93,10 +97,24 @@ const Navbar = () => {
                     <AiOutlineClose />
                   </button>
                 </li>
-                {(access === "Superadmin" || access == "Admin") &&
-                companyId !== "" ? (
+                {(access === "Superadmin" || access === "Admin") &&
+                  companyId !== "" && (
+                    <>
+                      {SuperAdminSidebarPages.map((item, index) => {
+                        return (
+                          <li key={index} className={item.className}>
+                            <Link to={item.path}>
+                              {item.icon}
+                              <span>{item.title}</span>
+                            </Link>
+                          </li>
+                        );
+                      })}
+                    </>
+                  )}
+                {access === "User" && companyId !== "" && (
                   <>
-                    {SuperAdminSidebarPages.map((item, index) => {
+                    {UserSidebarPages.map((item, index) => {
                       return (
                         <li key={index} className={item.className}>
                           <Link to={item.path}>
@@ -107,9 +125,10 @@ const Navbar = () => {
                       );
                     })}
                   </>
-                ) : (
+                )}
+                {access === "Superadmin" && companyId === "" && (
                   <>
-                    {UserSidebarPages.map((item, index) => {
+                    {IndependentSidebarPages.map((item, index) => {
                       return (
                         <li key={index} className={item.className}>
                           <Link to={item.path}>
