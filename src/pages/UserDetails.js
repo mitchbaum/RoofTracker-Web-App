@@ -47,6 +47,7 @@ const UserDetails = () => {
   useEffect(() => {
     onSnapshot(doc(db, "Users", `${user.uid}`), (doc) => {
       setPermission(doc.data()?.permission);
+      setAdminAccess(doc.data()?.access);
     });
     onSnapshot(doc(db, "Users", `${uid}`), (doc) => {
       setName(doc.data()?.name);
@@ -59,12 +60,6 @@ const UserDetails = () => {
 
     getFiles(filterBy);
   }, [user?.uid, filterBy]);
-
-  useEffect(() => {
-    onSnapshot(doc(db, "Users", `${user?.uid}`), (doc) => {
-      setAdminAccess(doc.data()?.access);
-    });
-  }, [user?.uid]);
 
   const getFiles = (filter) => {
     const collectionRef = collection(db, `Users/${uid}/Files`);
@@ -324,12 +319,14 @@ const UserDetails = () => {
                   </option>
                 </select>
               </div>
-              <button
-                className="status-btn security-access show-summary-btn"
-                onClick={() => setShowAddFile(!showAddFile)}
-              >
-                Add File
-              </button>
+              {adminAccess !== "User" && (
+                <button
+                  className="status-btn security-access show-summary-btn"
+                  onClick={() => setShowAddFile(!showAddFile)}
+                >
+                  Add File
+                </button>
+              )}
             </div>
           </div>
 
@@ -344,7 +341,7 @@ const UserDetails = () => {
                       <th style={{ width: "30%" }}>
                         Insurance Still Owes Homeowner
                       </th>
-                      <th style={{ width: "10%" }}>Final COC?</th>
+                      <th style={{ width: "10%" }}>Final COC</th>
                       <th style={{ width: "10%" }}>Job Status</th>
                       <th style={{ width: "30%" }}>Modified</th>
                     </tr>
@@ -382,7 +379,9 @@ const UserDetails = () => {
                             key={key}
                             onClick={() => clicked(val)}
                           >
-                            <tr>
+                            <tr
+                              className={val.missingFundsSwitch && "flag-row"}
+                            >
                               <td style={{ padding: "15px" }}>
                                 <img
                                   className="file-image"
@@ -396,7 +395,13 @@ const UserDetails = () => {
                               <td data-label="Name" className="name-data">
                                 {val.name !== "" ? val.name : "-"}
                               </td>
-                              <td data-label="Insurance Still Owes HO">
+                              <td
+                                data-label="Insurance Still Owes HO"
+                                className={
+                                  val.missingFundsSwitch &&
+                                  "flag-row-font-color"
+                                }
+                              >
                                 {val.coc !== "" && val.deductible !== ""
                                   ? getCurrencyLabel(
                                       `${
@@ -408,7 +413,7 @@ const UserDetails = () => {
                                     )
                                   : "Not available"}
                               </td>
-                              <td data-label="Final COC?">
+                              <td data-label="Final COC">
                                 {val.cocSwitch ? <div>Yes</div> : <div>No</div>}
                               </td>
                               <td data-label="Job Status">

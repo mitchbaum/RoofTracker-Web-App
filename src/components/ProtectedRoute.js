@@ -18,7 +18,7 @@ const ProtectedRoute = ({ children }) => {
     });
   }, [user?.uid]);
 
-  if (user && (access == "User" || access == "Inactive") && uid !== user?.uid) {
+  if (user && access == "Inactive" && uid !== user?.uid) {
     console.log(user);
     return <Navigate to="/error" />;
   } else {
