@@ -155,6 +155,9 @@
   .tooltip {
     display: none;
   }
+  .hide-on-mobile {
+    display: none;
+  }
 }
 
 /* portrait */

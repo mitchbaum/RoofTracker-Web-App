@@ -58,6 +58,7 @@ const FileInformation = () => {
   const [showAddCash, setShowAddCash] = useState(false);
   const [permission, setPermission] = useState("");
   const [missingFundsSwitch, setMissingFundsSwitch] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
 
   const [text, setText] = useState("");
 
@@ -532,6 +533,19 @@ const FileInformation = () => {
                   <h1 className="header-large">File Information</h1>
                   <div className="filler"></div>
                   <div className="align-center">
+                    <button
+                      className="status-btn security-access hide-on-mobile"
+                      style={{
+                        marginRight: "1.5rem",
+                        marginTop: 0,
+                        width: "auto",
+                      }}
+                      onClick={() => {
+                        setShowHelp(!showHelp);
+                      }}
+                    >
+                      {showHelp ? "Hide Help" : "Show Help"}
+                    </button>
                     {adminAccess === "User" && signedInAs !== salesRep ? (
                       <></>
                     ) : (
@@ -603,22 +617,108 @@ const FileInformation = () => {
                         {fileData.name !== "" ? fileData.name : "-"}
                       </p>
                       <p className="FI-salesrep">Sales Rep: {salesRep}</p>
-
                       <button
                         className="status-btn deactivate show-summary-btn"
                         onClick={() => setShowSummary(!showSummary)}
                       >
                         Show Summary
                       </button>
+                      {showHelp && (
+                        <>
+                          <span
+                            className="tooltip"
+                            data-tooltip-id="summary-tooltip"
+                          >
+                            ?
+                          </span>
+                          <Tooltip
+                            id="summary-tooltip"
+                            style={{
+                              backgroundColor: "#f5f5f5",
+                              fontWeight: "300",
+                              color: "#222",
+                              opacity: "1",
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
+                            >
+                              <span>
+                                All information needed to show an adjuster what
+                                money is missing and why.
+                              </span>
+                              <span>
+                                It adds up the insurance payments received by
+                                the homeowner, all the ACV work that we did not
+                                do, our COC figure, and deductible.
+                              </span>
+                            </div>
+                          </Tooltip>
+                        </>
+                      )}
                       {adminAccess === "User" && signedInAs !== salesRep ? (
                         <></>
                       ) : (
-                        <button
-                          className="status-btn security-access show-summary-btn"
-                          onClick={() => setShowEdit(!showEdit)}
-                        >
-                          Edit File
-                        </button>
+                        <>
+                          <button
+                            className="status-btn security-access show-summary-btn"
+                            onClick={() => setShowEdit(!showEdit)}
+                          >
+                            Edit File
+                          </button>
+                          {showHelp && (
+                            <>
+                              <span
+                                className="tooltip"
+                                data-tooltip-id="edit-tooltip"
+                              >
+                                ?
+                              </span>
+                              <Tooltip
+                                id="edit-tooltip"
+                                style={{
+                                  backgroundColor: "#f5f5f5",
+                                  fontWeight: "300",
+                                  color: "#222",
+                                  opacity: "1",
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    display: "flex",
+                                    flexDirection: "column",
+                                  }}
+                                >
+                                  <span>
+                                    Edit COC total invoice total, deductible,
+                                    and notes of any kind you wish.
+                                  </span>
+                                  <span>
+                                    Invoice total refers to the amount of
+                                    insurance proceeds the homeowner owes us, it
+                                    does not include cash items or credits.
+                                  </span>
+                                  <span>
+                                    Do not add cash items to the figure, however
+                                    you should subtract from the invoice any
+                                    cash credits, such as damaged property and
+                                    inconvenience credits you see on the
+                                    invoice.
+                                  </span>
+                                  <span>
+                                    Invoice total and COC total will most of the
+                                    time be the same number. The invoice number
+                                    will be lower only when there are credits in
+                                    the invoice.
+                                  </span>
+                                </div>
+                              </Tooltip>
+                            </>
+                          )}
+                        </>
                       )}
                     </div>
                   </div>
@@ -809,34 +909,42 @@ const FileInformation = () => {
                     <></>
                   ) : (
                     <div style={{ display: "flex" }}>
-                      <span
-                        className="tooltip"
-                        data-tooltip-id="tooltip"
-                        // data-tooltip-content='<br /> Paid to Company marked as "Yes" means that the check has been collected.<br /><br />Mark as "No" if the check has not been collected yet. <br />.'
-                      >
-                        ?
-                      </span>
-                      <Tooltip
-                        id="tooltip"
-                        style={{
-                          backgroundColor: "#f5f5f5",
-                          fontWeight: "300",
-                          color: "#222",
-                        }}
-                      >
-                        <div
-                          style={{ display: "flex", flexDirection: "column" }}
-                        >
-                          <span>
-                            Paid to Company marked as "Yes" means that the check
-                            has been collected.
+                      {showHelp && (
+                        <>
+                          <span
+                            className="tooltip"
+                            data-tooltip-id="check-tooltip"
+                          >
+                            ?
                           </span>
-                          <span>
-                            Mark as "No" if the check has not been collected
-                            yet.{" "}
-                          </span>
-                        </div>
-                      </Tooltip>
+                          <Tooltip
+                            id="check-tooltip"
+                            style={{
+                              backgroundColor: "#f5f5f5",
+                              fontWeight: "300",
+                              color: "#222",
+                              opacity: "1",
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
+                            >
+                              <span>
+                                Paid to Company marked as "Yes" means that the
+                                check has been collected.
+                              </span>
+                              <span>
+                                Mark as "No" if the check has not been collected
+                                yet.{" "}
+                              </span>
+                            </div>
+                          </Tooltip>
+                        </>
+                      )}
+
                       <button
                         className="status-btn security-access show-summary-btn"
                         onClick={() => {
@@ -956,17 +1064,62 @@ const FileInformation = () => {
                   {adminAccess === "User" && signedInAs !== salesRep ? (
                     <></>
                   ) : (
-                    <button
-                      className="status-btn security-access show-summary-btn"
-                      onClick={() => {
-                        setShowAddACV(!showAddACV);
-                        setText("Add");
-                        setItemData("");
-                      }}
-                      style={{ margin: "0", width: "110px" }}
-                    >
-                      Add ACV
-                    </button>
+                    <div style={{ display: "flex" }}>
+                      {showHelp && (
+                        <>
+                          <span
+                            className="tooltip"
+                            data-tooltip-id="acv-tooltip"
+                          >
+                            ?
+                          </span>
+                          <Tooltip
+                            id="acv-tooltip"
+                            style={{
+                              backgroundColor: "#f5f5f5",
+                              fontWeight: "300",
+                              color: "#222",
+                              opacity: "1",
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
+                            >
+                              <span>
+                                Money on the insurance estimate owed to the
+                                homeowner because we did not complete that work.
+                              </span>
+                              <span>
+                                Line item is any description you want.
+                              </span>
+                              <span>
+                                Price is usually the number to the far right
+                                column as you look at the page, it will have a
+                                column heading of ACV (Actual Cash Value).
+                              </span>
+                              <span>
+                                Line number refers to the line of the insurance
+                                estimate for that item.
+                              </span>
+                            </div>
+                          </Tooltip>
+                        </>
+                      )}
+                      <button
+                        className="status-btn security-access show-summary-btn"
+                        onClick={() => {
+                          setShowAddACV(!showAddACV);
+                          setText("Add");
+                          setItemData("");
+                        }}
+                        style={{ margin: "0", width: "110px" }}
+                      >
+                        Add ACV
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -1054,17 +1207,56 @@ const FileInformation = () => {
                   {adminAccess === "User" && signedInAs !== salesRep ? (
                     <></>
                   ) : (
-                    <button
-                      className="status-btn security-access show-summary-btn"
-                      onClick={() => {
-                        setShowAddRCV(!showAddRCV);
-                        setText("Add");
-                        setItemData("");
-                      }}
-                      style={{ margin: "0", width: "110px" }}
-                    >
-                      Add RCV
-                    </button>
+                    <div style={{ display: "flex" }}>
+                      {showHelp && (
+                        <>
+                          <span
+                            className="tooltip"
+                            data-tooltip-id="rcv-tooltip"
+                          >
+                            ?
+                          </span>
+                          <Tooltip
+                            id="rcv-tooltip"
+                            style={{
+                              backgroundColor: "#f5f5f5",
+                              fontWeight: "300",
+                              color: "#222",
+                              opacity: "1",
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
+                            >
+                              <span>Replacement Cost Value</span>
+                              <span>
+                                Used occasionally when you want to see how the
+                                insurance proceeds will look based on a given
+                                insurance estimate version.
+                              </span>
+                              <span>
+                                It is not counted anywhere in calculations. It
+                                is merely an anticipation of the final invoice.
+                              </span>
+                            </div>
+                          </Tooltip>
+                        </>
+                      )}
+                      <button
+                        className="status-btn security-access show-summary-btn"
+                        onClick={() => {
+                          setShowAddRCV(!showAddRCV);
+                          setText("Add");
+                          setItemData("");
+                        }}
+                        style={{ margin: "0", width: "110px" }}
+                      >
+                        Add RCV
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -1155,17 +1347,55 @@ const FileInformation = () => {
                   {adminAccess === "User" && signedInAs !== salesRep ? (
                     <></>
                   ) : (
-                    <button
-                      className="status-btn security-access show-summary-btn"
-                      onClick={() => {
-                        setShowAddCash(!showAddCash);
-                        setText("Add");
-                        setItemData("");
-                      }}
-                      style={{ margin: "0", width: "110px" }}
-                    >
-                      Add Cash
-                    </button>
+                    <div style={{ display: "flex" }}>
+                      {showHelp && (
+                        <>
+                          <span
+                            className="tooltip"
+                            data-tooltip-id="cash-tooltip"
+                          >
+                            ?
+                          </span>
+                          <Tooltip
+                            id="cash-tooltip"
+                            style={{
+                              backgroundColor: "#f5f5f5",
+                              fontWeight: "300",
+                              color: "#222",
+                              opacity: "1",
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
+                            >
+                              <span>
+                                Special request from homeowner that are not
+                                covered by insurance and we have provided a cash
+                                price.
+                              </span>
+                              <span>
+                                This will be factored into the invoice balance
+                                due.
+                              </span>
+                            </div>
+                          </Tooltip>
+                        </>
+                      )}
+                      <button
+                        className="status-btn security-access show-summary-btn"
+                        onClick={() => {
+                          setShowAddCash(!showAddCash);
+                          setText("Add");
+                          setItemData("");
+                        }}
+                        style={{ margin: "0", width: "110px" }}
+                      >
+                        Add Cash
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -1249,17 +1479,53 @@ const FileInformation = () => {
                   {adminAccess === "User" && signedInAs !== salesRep ? (
                     <></>
                   ) : (
-                    <button
-                      className="status-btn security-access show-summary-btn"
-                      onClick={() => {
-                        setShowAddCredit(!showAddCredit);
-                        setText("Add");
-                        setItemData("");
-                      }}
-                      style={{ margin: "0", width: "110px" }}
-                    >
-                      Add Credit
-                    </button>
+                    <div style={{ display: "flex" }}>
+                      {showHelp && (
+                        <>
+                          <span
+                            className="tooltip"
+                            data-tooltip-id="credit-tooltip"
+                          >
+                            ?
+                          </span>
+                          <Tooltip
+                            id="credit-tooltip"
+                            style={{
+                              backgroundColor: "#f5f5f5",
+                              fontWeight: "300",
+                              color: "#222",
+                              opacity: "1",
+                            }}
+                          >
+                            <div
+                              style={{
+                                display: "flex",
+                                flexDirection: "column",
+                              }}
+                            >
+                              <span>
+                                Credit given to the homeowner by the company
+                                usually for mistakes.
+                              </span>
+                              <span>
+                                This will be subtracted from the invoice total.
+                              </span>
+                            </div>
+                          </Tooltip>
+                        </>
+                      )}
+                      <button
+                        className="status-btn security-access show-summary-btn"
+                        onClick={() => {
+                          setShowAddCredit(!showAddCredit);
+                          setText("Add");
+                          setItemData("");
+                        }}
+                        style={{ margin: "0", width: "110px" }}
+                      >
+                        Add Credit
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
