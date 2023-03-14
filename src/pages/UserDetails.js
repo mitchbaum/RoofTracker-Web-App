@@ -167,14 +167,17 @@ const UserDetails = () => {
                 <p className="role inactive"> Inactive </p>
               )}
 
-              <div>
+              <div style={{ marginTop: "0.5rem" }}>
                 <p className="name">{name}</p>
                 <p className="email">{email}</p>
               </div>
 
               {missingFundsTotal !== 0.0 ? (
                 <>
-                  <div className="missing-funds-container">
+                  <div
+                    className="missing-funds-container"
+                    style={{ marginTop: "1rem" }}
+                  >
                     <div className="flag-label" style={{ fontSize: "16px" }}>
                       {getCurrencyLabel(`${missingFundsTotal}`, "")}
                     </div>
@@ -340,7 +343,6 @@ const UserDetails = () => {
                   </option>
                 </select>
               </div>
-              <div style={{ width: "2rem" }}></div>
               {adminAccess !== "User" && (
                 <button
                   className="status-btn security-access show-summary-btn"
