@@ -178,13 +178,21 @@ const UserDetails = () => {
                     className="missing-funds-container"
                     style={{ marginTop: "1rem" }}
                   >
-                    <div className="flag-label" style={{ fontSize: "16px" }}>
-                      {getCurrencyLabel(`${missingFundsTotal}`, "")}
-                    </div>
-                    <span style={{ marginLeft: "8px" }}>
-                      {" "}
+                    <div
+                      className="missing-funds-styles"
+                      style={{ display: "flex", alignItems: "flex-end" }}
+                    >
+                      <div
+                        style={{
+                          fontSize: "20px",
+                          marginRight: "8px",
+                          color: "#d30b0e",
+                        }}
+                      >
+                        {getCurrencyLabel(`${missingFundsTotal}`, "")}
+                      </div>
                       in Missing Funds Found
-                    </span>
+                    </div>
                   </div>
                 </>
               ) : (

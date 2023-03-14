@@ -55,6 +55,17 @@ li {
   text-align: center;
 }
 
+.missing-funds-styles {
+  font-size: 14px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  padding: 6px 10px;
+  color: black;
+  text-align: center;
+  box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,
+    rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+}
+
 .role {
   font-size: 12px;
   border: 0.7px solid #1d2731;
