@@ -7,6 +7,7 @@ import { updateDoc, doc, deleteDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebase";
 import { getStorage, ref, deleteObject } from "firebase/storage";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
+import CurrencyInput from "react-currency-input-field";
 
 const AreYouSure = ({
   fileData,
@@ -19,8 +20,13 @@ const AreYouSure = ({
   authUserId,
   missingFunds,
   missingFundsSwitch,
+  customFunds,
 }) => {
   const [error, setError] = useState("");
+  const [showCustom, setShowCustom] = useState(false);
+  const [customMissingFunds, setCustomMissingFunds] = useState(0.0);
+
+  var showCustomEntry = 0;
 
   if (!open) return null;
 
@@ -59,9 +65,13 @@ const AreYouSure = ({
       });
     }
     if (
-      (action === "Comfirm Missing Funds" && fileData.coc === "") ||
-      fileData.deductible === ""
+      action === "Comfirm Missing Funds" &&
+      (fileData.coc === "" || fileData.deductible === "")
     ) {
+      return onClose(false);
+    } else if (action == "Comfirm Missing Funds" && customMissingFunds > 0) {
+      missingFunds(true);
+      customFunds(customMissingFunds);
       return onClose(false);
     } else if (action == "Comfirm Missing Funds" && !missingFundsSwitch) {
       missingFunds(true);
@@ -182,6 +192,14 @@ const AreYouSure = ({
     });
 
     return;
+  };
+
+  const customMissingFundsAmount = (missingFunds) => {
+    showCustomEntry += 1;
+    if (showCustomEntry == 5) {
+      console.log("found me!");
+      setShowCustom(true);
+    }
   };
 
   const getCurrencyLabel = (data, placeholder) => {
@@ -331,28 +349,61 @@ const AreYouSure = ({
                     Is this the correct amount missing that will be pursued to
                     collect?
                   </p>
-                  <p
+                  <div
                     className="error-message"
                     style={{ color: "#676767", display: "block" }}
-                  >
-                    Insurance Still Owes Homeowner:{" "}
-                    <span className="FI-message">
-                      {getCurrencyLabel(
+                    onClick={() => {
+                      customMissingFundsAmount(
                         `${
                           fileData.coc * 1 +
                           fileData.insCheckACVTotal * 1 -
                           fileData.deductible * 1
-                        }`,
-                        "$0.00"
-                      )}
-                    </span>
-                  </p>
+                        }`
+                      );
+                    }}
+                  >
+                    {showCustom
+                      ? "Custom Missing Funds Amount:"
+                      : "Insurance Still Owes Homeowner:"}
+                    {showCustom ? (
+                      <div className="input-group">
+                        <CurrencyInput
+                          id="invoice-input"
+                          allowNegativeValue={false}
+                          name="invoice"
+                          placeholder="Enter invoice"
+                          prefix="$"
+                          decimalsLimit={2}
+                          decimalSeparator="."
+                          defaultValue={
+                            fileData.coc * 1 +
+                            fileData.insCheckACVTotal * 1 -
+                            fileData.deductible * 1
+                          }
+                          onValueChange={(value) =>
+                            setCustomMissingFunds(value)
+                          }
+                        />
+                      </div>
+                    ) : (
+                      <span className="FI-message">
+                        {getCurrencyLabel(
+                          `${
+                            fileData.coc * 1 +
+                            fileData.insCheckACVTotal * 1 -
+                            fileData.deductible * 1
+                          }`,
+                          "$0.00"
+                        )}
+                      </span>
+                    )}
+                  </div>
                 </>
               )}
             </>
           )}
-        {(action === "Comfirm Missing Funds" && fileData.coc === "") ||
-          (fileData.deductible === "" && (
+        {action === "Comfirm Missing Funds" &&
+          (fileData.coc === "" || fileData.deductible === "") && (
             <p
               style={{
                 fontWeight: "300",
@@ -363,7 +414,7 @@ const AreYouSure = ({
               No missing funds detected. Could not calculate due to missing
               Deductible and COC.
             </p>
-          ))}
+          )}
         <button
           className="status-btn deactivate "
           onClick={handleSubmit}

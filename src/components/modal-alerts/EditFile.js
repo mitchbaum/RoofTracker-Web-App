@@ -47,6 +47,7 @@ const EditFile = ({
   const [missingFundsSwitch, setMissingFundsSwitch] = useState(
     data.missingFundsSwitch ?? false
   );
+  const [customMissingFunds, setCustomMissingFunds] = useState(0.0);
   const [invoice, setInvoice] = useState(data.invoice ?? "");
   const [note, setNote] = useState(data.note ?? "");
   const [type, setType] = useState(data.type ?? "");
@@ -127,21 +128,37 @@ const EditFile = ({
       if (missingFundsSwitch && !data.missingFunds) {
         console.log("saving missingFunds");
         // update sales rep total and file
-        await updateDoc(doc(db, `Users/${uid}/Files/${fileId}`), {
-          missingFunds: coc * 1 + data.insCheckACVTotal * 1 - deductible * 1,
-        }).then(updateUserTotalMissingFunds());
+        if (customMissingFunds > 0) {
+          await updateDoc(doc(db, `Users/${uid}/Files/${fileId}`), {
+            missingFunds: customMissingFunds,
+          }).then(updateUserTotalMissingFunds());
+        } else {
+          await updateDoc(doc(db, `Users/${uid}/Files/${fileId}`), {
+            missingFunds: coc * 1 + data.insCheckACVTotal * 1 - deductible * 1,
+          }).then(updateUserTotalMissingFunds());
+        }
 
         // update company total and company log
         const docRef = doc(
           collection(db, `Companies/${companyId}/MissingFundsLog`)
         );
-        await setDoc(docRef, {
-          missingFunds: coc * 1 + data.insCheckACVTotal * 1 - deductible * 1,
-          timeStamp: serverTimestamp(),
-          fileId: fileId,
-          fileName: data.name,
-          ownerId: uid,
-        }).then(updateCompanyTotalMissingFunds());
+        if (customMissingFunds > 0) {
+          await setDoc(docRef, {
+            missingFunds: customMissingFunds,
+            timeStamp: serverTimestamp(),
+            fileId: fileId,
+            fileName: data.name,
+            ownerId: uid,
+          }).then(updateCompanyTotalMissingFunds());
+        } else {
+          await setDoc(docRef, {
+            missingFunds: coc * 1 + data.insCheckACVTotal * 1 - deductible * 1,
+            timeStamp: serverTimestamp(),
+            fileId: fileId,
+            fileName: data.name,
+            ownerId: uid,
+          }).then(updateCompanyTotalMissingFunds());
+        }
       }
     }
 
@@ -202,7 +219,6 @@ const EditFile = ({
         updateDoc(doc(db, `Users/${uid}/Files`, fileId), {
           imageData: url,
         });
-        console.log(url);
       });
       return;
     });
@@ -230,6 +246,7 @@ const EditFile = ({
               authUserId={user.uid}
               missingFunds={setMissingFundsSwitch}
               missingFundsSwitch={missingFundsSwitch}
+              customFunds={setCustomMissingFunds}
             />
           )}
           <form

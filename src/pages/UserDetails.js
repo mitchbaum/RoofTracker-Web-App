@@ -412,7 +412,9 @@ const UserDetails = () => {
                             onClick={() => clicked(val)}
                           >
                             <tr
-                              className={val.missingFundsSwitch && "flag-row"}
+                              className={
+                                val.missingFundsSwitch ? "flag-row" : undefined
+                              }
                             >
                               <td style={{ padding: "15px" }}>
                                 <img
@@ -430,8 +432,9 @@ const UserDetails = () => {
                               <td
                                 data-label="Insurance Still Owes HO"
                                 className={
-                                  val.missingFundsSwitch &&
-                                  "flag-row-font-color"
+                                  val.missingFundsSwitch
+                                    ? "flag-row-font-color"
+                                    : undefined
                                 }
                               >
                                 {val.coc !== "" && val.deductible !== ""
