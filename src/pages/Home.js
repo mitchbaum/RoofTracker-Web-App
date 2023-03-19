@@ -174,7 +174,7 @@ function Home() {
       ]);
     });
     // console.log(id);
-    // console.log(files);
+    //console.log(files);
     setisPending(false);
     if (filesData.length == 0) {
       return setError("No files found");
@@ -369,6 +369,14 @@ function Home() {
                     {/* moment(data, "MMMM Do YYYY, h:mm:ss a").format("ll"); */}
                     {filesData &&
                       filesData
+                        // sort by name
+                        // .sort(function (a, b) {
+                        //   if (a.name.toLowerCase() < b.name.toLowerCase())
+                        //     return -1;
+                        //   if (a.name.toLowerCase() > b.name.toLowerCase())
+                        //     return 1;
+                        //   return 0;
+                        // })
                         .sort((a, b) =>
                           moment(
                             a["timeStamp"],
