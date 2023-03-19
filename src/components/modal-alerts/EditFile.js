@@ -138,26 +138,29 @@ const EditFile = ({
           }).then(updateUserTotalMissingFunds());
         }
 
-        // update company total and company log
-        const docRef = doc(
-          collection(db, `Companies/${companyId}/MissingFundsLog`)
-        );
-        if (customMissingFunds > 0) {
-          await setDoc(docRef, {
-            missingFunds: customMissingFunds,
-            timeStamp: serverTimestamp(),
-            fileId: fileId,
-            fileName: data.name,
-            ownerId: uid,
-          }).then(updateCompanyTotalMissingFunds());
-        } else {
-          await setDoc(docRef, {
-            missingFunds: coc * 1 + data.insCheckACVTotal * 1 - deductible * 1,
-            timeStamp: serverTimestamp(),
-            fileId: fileId,
-            fileName: data.name,
-            ownerId: uid,
-          }).then(updateCompanyTotalMissingFunds());
+        if (companyId !== "") {
+          // update company total and company log
+          const docRef = doc(
+            collection(db, `Companies/${companyId}/MissingFundsLog`)
+          );
+          if (customMissingFunds > 0) {
+            await setDoc(docRef, {
+              missingFunds: customMissingFunds,
+              timeStamp: serverTimestamp(),
+              fileId: fileId,
+              fileName: data.name,
+              ownerId: uid,
+            }).then(updateCompanyTotalMissingFunds());
+          } else {
+            await setDoc(docRef, {
+              missingFunds:
+                coc * 1 + data.insCheckACVTotal * 1 - deductible * 1,
+              timeStamp: serverTimestamp(),
+              fileId: fileId,
+              fileName: data.name,
+              ownerId: uid,
+            }).then(updateCompanyTotalMissingFunds());
+          }
         }
       }
     }

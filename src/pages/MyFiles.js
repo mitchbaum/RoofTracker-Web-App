@@ -46,8 +46,7 @@ const MyFiles = () => {
   useEffect(() => {
     const q = query(
       collection(db, `Users/${user?.uid}/Files`),
-      where("type", "==", filterBy),
-      orderBy("modified", "desc")
+      where("type", "==", filterBy)
     );
     onSnapshot(q, (querySnapshot) => {
       fetchFiles(
