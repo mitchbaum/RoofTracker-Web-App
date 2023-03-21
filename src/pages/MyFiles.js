@@ -18,6 +18,8 @@ import {
 } from "firebase/firestore";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
 import PleaseLogin from "../components/error-pages/PleaseLogin";
+import { BottomScrollListener } from "react-bottom-scroll-listener";
+import { TailSpin } from "react-loader-spinner";
 
 const MyFiles = () => {
   const { user } = UserAuth();
@@ -30,12 +32,10 @@ const MyFiles = () => {
   const [error, setError] = useState("");
   const [showAddFile, setShowAddFile] = useState(false);
   const [access, setAccess] = useState("");
+  const [latestDoc, setLatestDoc] = useState({});
+  const [showSpinner, setShowSpinner] = useState(false);
 
   const navigate = useNavigate();
-
-  // const { data, isPending, error } = useFetch(
-  //   "http://localhost:8000/team/1234324234"
-  // );
 
   useEffect(() => {
     onSnapshot(doc(db, "Users", `${user?.uid}`), (doc) => {
@@ -46,7 +46,9 @@ const MyFiles = () => {
   useEffect(() => {
     const q = query(
       collection(db, `Users/${user?.uid}/Files`),
-      where("type", "==", filterBy)
+      where("type", "==", filterBy),
+      orderBy("modified", "desc"),
+      limit(12)
     );
     onSnapshot(q, (querySnapshot) => {
       fetchFiles(
@@ -61,7 +63,8 @@ const MyFiles = () => {
               "Error occured loading your files. Double check your connection and try again. If error persists, contact Roof Tracker support."
             );
           }
-        )
+        ),
+        true
       );
       setShowAddFile(false);
     });
@@ -73,8 +76,42 @@ const MyFiles = () => {
     navigate(`/file-information/${user?.uid}/${val.id}`);
   };
 
-  const fetchFiles = (files) => {
-    let data = [];
+  const loadMoreFiles = () => {
+    setShowSpinner(true);
+    const q = query(
+      collection(db, `Users/${user?.uid}/Files`),
+      where("type", "==", filterBy),
+      orderBy("modified", "desc"),
+      startAfter(latestDoc.modified),
+      limit(5)
+    );
+    onSnapshot(q, (querySnapshot) => {
+      fetchFiles(
+        querySnapshot.docs.map(
+          (doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }),
+          (error) => {
+            setisPending(false);
+            return setError(
+              "Error occured loading your files. Double check your connection and try again. If error persists, contact Roof Tracker support."
+            );
+          }
+        ),
+        false
+      );
+      setShowAddFile(false);
+    });
+  };
+
+  const fetchFiles = (files, resetData) => {
+    var data;
+    if (resetData) {
+      data = [];
+    } else {
+      data = [...filesData];
+    }
     files.forEach(async (result) => {
       data.push(result);
     });
@@ -82,8 +119,11 @@ const MyFiles = () => {
     if (data.length == 0) {
       // clear the state when no files are found
       setFilesData(data);
+      setShowSpinner(false);
       return setError("No files found");
     }
+    setLatestDoc(data[data.length - 1]);
+    setShowSpinner(false);
     return setFilesData(data);
   };
 
@@ -110,6 +150,7 @@ const MyFiles = () => {
     <>
       {user && access !== "Inactive" ? (
         <>
+          <BottomScrollListener onBottom={loadMoreFiles} />
           {showAddFile && (
             <AddFile
               open={showAddFile}
@@ -152,7 +193,8 @@ const MyFiles = () => {
               </div>
               <button
                 className="status-btn security-access show-summary-btn"
-                onClick={() => setShowAddFile(!showAddFile)}
+                // onClick={() => setShowAddFile(!showAddFile)}
+                onClick={() => loadMoreFiles()}
               >
                 Add File
               </button>
@@ -213,7 +255,11 @@ const MyFiles = () => {
                           className="table-cells-container"
                           key={key}
                         >
-                          <tr className={val.missingFundsSwitch && "flag-row"}>
+                          <tr
+                            className={
+                              val.missingFundsSwitch ? "flag-row" : undefined
+                            }
+                          >
                             <td style={{ padding: "15px" }}>
                               <img
                                 className="file-image"
@@ -230,7 +276,9 @@ const MyFiles = () => {
                             <td
                               data-label="Insurance Still Owes HO"
                               className={
-                                val.missingFundsSwitch && "flag-row-font-color"
+                                val.missingFundsSwitch
+                                  ? "flag-row-font-color"
+                                  : undefined
                               }
                             >
                               {val.coc !== "" && val.deductible !== ""
@@ -269,6 +317,18 @@ const MyFiles = () => {
               </table>
             </div>
           )}
+          <div className="loading-spinner">
+            <TailSpin
+              height="35"
+              width="35"
+              color="#d30b0e"
+              ariaLabel="tail-spin-loading"
+              radius="1"
+              wrapperStyle={{}}
+              wrapperClass=""
+              visible={showSpinner}
+            />
+          </div>
           <div className="header" style={{ marginTop: "1rem" }}>
             {filesData.length == 0 && (
               <div style={{ color: "#d30b0e" }}>{error}</div>

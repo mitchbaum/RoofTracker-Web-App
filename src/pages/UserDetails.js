@@ -13,6 +13,9 @@ import {
   getDocs,
   query,
   where,
+  orderBy,
+  limit,
+  startAfter,
 } from "firebase/firestore";
 import AreYouSure from "../components/modal-alerts/AreYouSure";
 import TableTemp from "../components/isPending-templates/TableTemp";
@@ -21,6 +24,8 @@ import { useNavigate } from "react-router-dom";
 import AddFile from "../components/modal-alerts/AddFile";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
 import PleaseLogin from "../components/error-pages/PleaseLogin";
+import { BottomScrollListener } from "react-bottom-scroll-listener";
+import { TailSpin } from "react-loader-spinner";
 
 const UserDetails = () => {
   const { uid } = useParams();
@@ -42,6 +47,8 @@ const UserDetails = () => {
   const [missingFundsTotal, setMissingFundsTotal] = useState(0.0);
   const [filterBy, setFilterBy] = useState("Open");
   const [filesData, setFilesData] = useState([]);
+  const [latestDoc, setLatestDoc] = useState({});
+  const [showSpinner, setShowSpinner] = useState(false);
 
   const navigate = useNavigate();
 
@@ -59,13 +66,16 @@ const UserDetails = () => {
       setIsPending(false);
       setShowAlert(false);
     });
+  }, [user?.uid]);
 
-    getFiles(filterBy);
-  }, [user?.uid, filterBy]);
-
-  const getFiles = (filter) => {
+  useEffect(() => {
     const collectionRef = collection(db, `Users/${uid}/Files`);
-    const q = query(collectionRef, where("type", "==", filter));
+    const q = query(
+      collectionRef,
+      where("type", "==", filterBy),
+      orderBy("modified", "desc"),
+      limit(12)
+    );
     onSnapshot(q, (querySnapshot) => {
       fetchFiles(
         querySnapshot.docs.map(
@@ -79,14 +89,50 @@ const UserDetails = () => {
               "Error occured loading your files. Double check your connection and try again. If error persists, contact Roof Tracker support."
             );
           }
-        )
+        ),
+        true
+      );
+      setShowAddFile(false);
+    });
+  }, [user?.uid, filterBy]);
+
+  const loadMoreFiles = () => {
+    setShowSpinner(true);
+    const collectionRef = collection(db, `Users/${uid}/Files`);
+    const q = query(
+      collectionRef,
+      where("type", "==", filterBy),
+      orderBy("modified", "desc"),
+      startAfter(latestDoc.modified),
+      limit(5)
+    );
+    onSnapshot(q, (querySnapshot) => {
+      fetchFiles(
+        querySnapshot.docs.map(
+          (doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }),
+          (error) => {
+            setIsPending(false);
+            return setError(
+              "Error occured loading your files. Double check your connection and try again. If error persists, contact Roof Tracker support."
+            );
+          }
+        ),
+        false
       );
       setShowAddFile(false);
     });
   };
 
-  const fetchFiles = (files) => {
-    let data = [];
+  const fetchFiles = (files, resetData) => {
+    var data;
+    if (resetData) {
+      data = [];
+    } else {
+      data = [...filesData];
+    }
     files.forEach(async (result) => {
       data.push(result);
     });
@@ -96,6 +142,8 @@ const UserDetails = () => {
       setFilesData(data);
       return setError("No files found");
     }
+    setLatestDoc(data[data.length - 1]);
+    setShowSpinner(false);
     return setFilesData(data);
   };
 
@@ -128,6 +176,7 @@ const UserDetails = () => {
     <>
       {user ? (
         <>
+          <BottomScrollListener onBottom={loadMoreFiles} />
           {showAddFile && (
             <AddFile
               open={showAddFile}
@@ -470,6 +519,18 @@ const UserDetails = () => {
                         );
                       })}
                 </table>
+              </div>
+              <div className="loading-spinner">
+                <TailSpin
+                  height="35"
+                  width="35"
+                  color="#d30b0e"
+                  ariaLabel="tail-spin-loading"
+                  radius="1"
+                  wrapperStyle={{}}
+                  wrapperClass=""
+                  visible={showSpinner}
+                />
               </div>
             </>
           ) : (

@@ -3,6 +3,14 @@
   border: 0.5px lightgrey solid;
   border-radius: 5px;
   display: flex;
+  /* height: 70vh; */
+  /* scroll stuff */
+  box-sizing: border-box;
+  overflow: auto;
+}
+
+.table-container::-webkit-scrollbar {
+  display: none;
 }
 
 .table-cells-container {
@@ -68,6 +76,11 @@ table td {
   text-align: left;
   line-height: 2rem;
   border-bottom: 0.5px lightgrey solid;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
 }
 
 @media screen and (max-width: 600px) {
