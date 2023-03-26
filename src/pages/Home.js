@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { AiFillCheckCircle, AiFillFolderOpen } from "react-icons/ai";
-
+import { AiFillCheckCircle, AiFillDollarCircle } from "react-icons/ai";
+import { HiCurrencyDollar } from "react-icons/hi";
 import { BsFillCheckCircleFill } from "react-icons/bs";
 import AddTask from "../components/task/AddTask";
 import Navbar from "../components/navbar/Navbar";
@@ -34,7 +34,6 @@ import PleaseLogin from "../components/error-pages/PleaseLogin";
 function Home() {
   const { user } = UserAuth();
   const [didMount, setDidMount] = useState(false);
-  const [redirect, setRedirect] = useState(false);
 
   const [filterBy, setFilterBy] = useState("Open");
   const [filterByModified, setFilterByModified] = useState("720");
@@ -52,13 +51,9 @@ function Home() {
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  // const {
-  //   data: user,
-  //   isPending,
-  //   error,
-  // } = useFetch("http://localhost:8000/team/1234324234");
+  const [companyMissingFunds, setCompanyMissingFunds] = useState(0.0);
+
   const navigate = useNavigate();
-  const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
     onSnapshot(doc(db, "Users", `${user?.uid}`), (doc) => {
@@ -67,6 +62,12 @@ function Home() {
       setAccess(doc.data()?.access);
     });
   }, [user?.uid]);
+
+  useEffect(() => {
+    onSnapshot(doc(db, "Companies", `${companyId}`), (doc) => {
+      setCompanyMissingFunds(doc.data()?.missingFundsTotal);
+    });
+  }, [user?.uid, companyId]);
 
   //get tasks
   useEffect(() => {
@@ -242,36 +243,38 @@ function Home() {
             <p className="header-small">Dashboard</p>
             <h1 className="header-large">Home</h1>
           </div>
-          {/* <div className="card-container">
-        <div
-          className="card"
-          style={{ borderColor: "#d30b0e", color: "#d30b0e" }}
-        >
-          <div className="flex-space-between">
-            <p style={{ fontSize: "24px" }}>10 </p>
-            <div className="card-icon align-center">
-              <AiFillFolderOpen />
+          <div className="card-container">
+            <div
+              className="card"
+              style={{ borderColor: "#d30b0e", color: "#d30b0e" }}
+            >
+              <div className="flex-space-between">
+                <p style={{ fontSize: "24px", marginRight: "1rem" }}>
+                  {getCurrencyLabel(`${companyMissingFunds}`, "$0.00")}
+                </p>
+                <div className="card-icon align-center">
+                  <AiFillDollarCircle />
+                </div>
+              </div>
+              <p>Company Missing Funds Found</p>
             </div>
+            {/* <div
+              className="card"
+              style={{
+                borderColor: "#1d2731",
+                color: "#1d2731",
+                marginLeft: "2rem",
+              }}
+            >
+              <div className="flex-space-between">
+                <p style={{ fontSize: "24px" }}>180 </p>
+                <div className="card-icon align-center">
+                  <BsFillCheckCircleFill />
+                </div>
+              </div>
+              <p>Closed Projects</p>
+            </div> */}
           </div>
-          <p>Open Projects</p>
-        </div>
-        <div
-          className="card"
-          style={{
-            borderColor: "#1d2731",
-            color: "#1d2731",
-            marginLeft: "2rem",
-          }}
-        >
-          <div className="flex-space-between">
-            <p style={{ fontSize: "24px" }}>180 </p>
-            <div className="card-icon align-center">
-              <BsFillCheckCircleFill />
-            </div>
-          </div>
-          <p>Closed Projects</p>
-        </div>
-      </div> */}
 
           <div className="card-container">
             <div className="files-container">
