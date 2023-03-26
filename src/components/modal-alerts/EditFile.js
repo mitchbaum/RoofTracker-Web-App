@@ -143,10 +143,12 @@ const EditFile = ({
           const docRef = doc(
             collection(db, `Companies/${companyId}/MissingFundsLog`)
           );
+          const id = docRef.id;
           if (customMissingFunds > 0) {
             await setDoc(docRef, {
               missingFunds: customMissingFunds,
               timeStamp: serverTimestamp(),
+              id: id,
               fileId: fileId,
               fileName: data.name,
               ownerId: uid,
@@ -156,6 +158,7 @@ const EditFile = ({
               missingFunds:
                 coc * 1 + data.insCheckACVTotal * 1 - deductible * 1,
               timeStamp: serverTimestamp(),
+              id: id,
               fileId: fileId,
               fileName: data.name,
               ownerId: uid,

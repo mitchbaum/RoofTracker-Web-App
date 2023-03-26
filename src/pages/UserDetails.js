@@ -62,7 +62,7 @@ const UserDetails = () => {
       setPic(doc.data()?.["profile pic url"]);
       setAccess(doc.data()?.access);
       setEmail(doc.data()?.email);
-      setMissingFundsTotal(doc.data()?.missingFundsTotal);
+      setMissingFundsTotal(doc.data()?.missingFundsTotal ?? 0.0);
       setIsPending(false);
       setShowAlert(false);
     });
@@ -221,32 +221,23 @@ const UserDetails = () => {
                 <p className="email">{email}</p>
               </div>
 
-              {missingFundsTotal !== 0.0 ? (
-                <>
+              <div
+                className="missing-funds-container"
+                style={{ marginTop: "1rem" }}
+              >
+                <div className="missing-funds-styles">
                   <div
-                    className="missing-funds-container"
-                    style={{ marginTop: "1rem" }}
+                    style={{
+                      fontSize: "20px",
+                      marginRight: "8px",
+                      color: "#d30b0e",
+                    }}
                   >
-                    <div
-                      className="missing-funds-styles"
-                      style={{ display: "flex", alignItems: "flex-end" }}
-                    >
-                      <div
-                        style={{
-                          fontSize: "20px",
-                          marginRight: "8px",
-                          color: "#d30b0e",
-                        }}
-                      >
-                        {getCurrencyLabel(`${missingFundsTotal}`, "")}
-                      </div>
-                      in Missing Funds Found
-                    </div>
+                    {getCurrencyLabel(`${missingFundsTotal}`, "$0.00")}
                   </div>
-                </>
-              ) : (
-                <div></div>
-              )}
+                  in Missing Funds Found
+                </div>
+              </div>
             </div>
             {uid !== user?.uid &&
             adminAccess === "Superadmin" &&

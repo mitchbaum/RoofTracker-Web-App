@@ -13,6 +13,17 @@
   display: none;
 }
 
+.missing-funds-table-container {
+  margin: 1rem 0;
+  min-width: 500px;
+  min-height: 100px;
+  border: 0.5px lightgrey solid;
+}
+
+.table-cells-container.auto-cursor {
+  cursor: auto;
+}
+
 .table-cells-container {
   cursor: pointer;
 }
@@ -84,6 +95,11 @@ table td {
 }
 
 @media screen and (max-width: 600px) {
+  .missing-funds-table-container {
+    margin: 1rem 0;
+    min-width: 90%;
+    min-height: 400px;
+  }
   .table-container {
     margin: 1rem 1rem 2rem 1rem;
   }
@@ -117,7 +133,7 @@ table td {
   }
 
   table td {
-    border-bottom: 1px solid #d3d3d3;
+    border-bottom: 0px solid #d3d3d3;
     display: block;
     text-align: right;
   }

@@ -12,10 +12,11 @@ import {
   query,
   where,
   getDocs,
-  deleteField,
+  orderBy,
 } from "firebase/firestore";
 import Placeholder from "../logo/account-icon.png";
 import EditProfilePic from "../components/modal-alerts/EditProfilePic";
+import MissingFunds from "../components/modal-alerts/MissingFunds";
 import uuid from "react-native-uuid";
 import AccountDetailsTemp from "../components/isPending-templates/AccountDetailsTemp";
 import PleaseLogin from "../components/error-pages/PleaseLogin";
@@ -27,6 +28,7 @@ const Settings = () => {
   const [isPending, setIsPending] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [showChangePic, setShowChangePic] = useState(false);
+  const [showMissingFunds, setShowMissingFunds] = useState(false);
   const [pwError, setPwError] = useState("");
   const [codeError, setCodeError] = useState("");
   const [joinCodeError, setJoinCodeError] = useState("");
@@ -42,6 +44,7 @@ const Settings = () => {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [missingFundsTotal, setMissingFundsTotal] = useState("");
   const [company, setCompany] = useState("");
   const [companyId, setCompanyId] = useState("");
   const [code, setCode] = useState("");
@@ -56,10 +59,13 @@ const Settings = () => {
   const [joinCompanyCode, setJoinCompanyCode] = useState("");
   const [companies, setCompanies] = useState([]);
 
+  const [missingFundsData, setMissingFundsData] = useState([]);
+
   useEffect(() => {
     onSnapshot(doc(db, "Users", `${user?.uid}`), (doc) => {
       setName(doc.data()?.name);
       setEmail(doc.data()?.email);
+      setMissingFundsTotal(doc.data()?.missingFundsTotal);
 
       setAccess(doc.data()?.access);
       setPermission(doc.data()?.permission);
@@ -71,7 +77,49 @@ const Settings = () => {
     onSnapshot(doc(db, "Admin", "Codes"), (doc) => {
       setRegCode(doc.data()?.company);
     });
+    getMissingFunds();
   }, [user?.uid]);
+
+  const getMissingFunds = () => {
+    const q = query(
+      collection(db, `Users/${user?.uid}/Files`),
+      where("missingFunds", ">=", 0)
+    );
+    onSnapshot(q, (querySnapshot) => {
+      fetchFiles(
+        querySnapshot.docs.map(
+          (doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }),
+          (error) => {
+            return console.log(
+              "Error occured loading your missing funds files"
+            );
+          }
+        ),
+        true
+      );
+    });
+  };
+
+  const fetchFiles = (files, resetData) => {
+    var data;
+    if (resetData) {
+      data = [];
+    } else {
+      data = [...missingFundsData];
+    }
+    files.forEach(async (result) => {
+      data.push(result);
+    });
+    if (data.length == 0) {
+      // clear the state when no files are found
+      setMissingFundsData(data);
+      return;
+    }
+    return setMissingFundsData(data);
+  };
 
   useEffect(() => {
     if (companyId) {
@@ -231,6 +279,16 @@ const Settings = () => {
               onClose={() => setShowChangePic(false)}
             />
           )}
+          {showMissingFunds && (
+            <MissingFunds
+              open={showMissingFunds}
+              onClose={() => setShowMissingFunds(false)}
+              filesWithMissingFunds={missingFundsData}
+              accountMissingFundsTotal={missingFundsTotal}
+              companyId={companyId}
+              uid={user.uid}
+            />
+          )}
           <div className="header">
             <p className="header-small">My Account</p>
             <h1 className="header-large">Settings</h1>
@@ -267,6 +325,7 @@ const Settings = () => {
                     <p className="email">{email}</p>
                   </div>
                   <div></div>
+                  <div></div>
                 </div>
 
                 <ul className="button-container">
@@ -284,6 +343,15 @@ const Settings = () => {
                       className="status-btn security-access"
                     >
                       Reset Password
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      onClick={() => setShowMissingFunds(!showMissingFunds)}
+                      className="status-btn deactivate"
+                      style={{ marginTop: "1rem" }}
+                    >
+                      Manage Missing Funds
                     </button>
                   </li>
                   {pwError ? (

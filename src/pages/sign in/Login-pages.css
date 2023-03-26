@@ -210,4 +210,8 @@
   .already-have-account-label {
     display: none;
   }
+
+  .left-column {
+    margin-top: 2rem;
+  }
 }
