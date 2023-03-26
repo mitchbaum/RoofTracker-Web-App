@@ -268,6 +268,16 @@ const Settings = () => {
     });
     setCompanies(postData);
   };
+  const getCurrencyLabel = (data, placeholder) => {
+    if (data == "") {
+      return placeholder;
+    } else {
+      return new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(data * 1);
+    }
+  };
 
   return (
     <>
@@ -323,6 +333,23 @@ const Settings = () => {
                   <div>
                     <p className="name">{name}</p>
                     <p className="email">{email}</p>
+                  </div>
+                  <div
+                    className="missing-funds-container"
+                    style={{ marginTop: "1rem" }}
+                  >
+                    <div className="missing-funds-styles">
+                      <div
+                        style={{
+                          fontSize: "20px",
+                          marginRight: "8px",
+                          color: "#d30b0e",
+                        }}
+                      >
+                        {getCurrencyLabel(`${missingFundsTotal}`, "$0.00")}
+                      </div>
+                      in Missing Funds Found
+                    </div>
                   </div>
                   <div></div>
                   <div></div>
