@@ -777,7 +777,7 @@ const FileInformation = () => {
                     </p>
                   </div>
                   <div className="label-message-container">
-                    <p>Remaining Invoice - What's Due</p>
+                    <p>Remaining Invoice "What's Due"</p>
                     <p className="FI-message">
                       {fileData.coc !== "" &&
                       fileData.deductible !== "" &&
@@ -809,6 +809,7 @@ const FileInformation = () => {
                         ? getCurrencyLabel(
                             `${
                               fileData.deductible * 1 -
+                              fileData.creditItemTotal -
                               fileData.acvItemTotal * 1
                             }`,
                             ""
@@ -816,6 +817,58 @@ const FileInformation = () => {
                         : ""}
                     </p>
                   </div>
+
+                  <div
+                    className="label-message-container"
+                    style={{ textAlign: "center" }}
+                  >
+                    {fileData.deductible * 1 -
+                      fileData.creditItemTotal -
+                      fileData.acvItemTotal * 1 <
+                      0 && (
+                      <p style={{ color: "green" }}>
+                        🎉 Your customer will get{" "}
+                        {getCurrencyLabel(
+                          `${Math.abs(
+                            fileData.deductible * 1 -
+                              fileData.creditItemTotal -
+                              fileData.acvItemTotal * 1
+                          )}`
+                        )}{" "}
+                        back when all insurance proceeds are paid.{" "}
+                      </p>
+                    )}
+                    {fileData.deductible * 1 -
+                      fileData.creditItemTotal -
+                      fileData.acvItemTotal * 1 ==
+                      fileData.deductible * 1 && (
+                      <p>
+                        Your customer will owe their deductible when all
+                        insurance proceeds are paid.
+                      </p>
+                    )}
+                    {fileData.deductible * 1 -
+                      fileData.creditItemTotal -
+                      fileData.acvItemTotal * 1 >
+                      0 &&
+                      fileData.deductible * 1 -
+                        fileData.creditItemTotal -
+                        fileData.acvItemTotal * 1 !=
+                        fileData.deductible * 1 && (
+                        <p>
+                          Your customer will owe{" "}
+                          {getCurrencyLabel(
+                            `${
+                              fileData.deductible * 1 -
+                              fileData.creditItemTotal -
+                              fileData.acvItemTotal * 1
+                            }`
+                          )}{" "}
+                          after all insurance proceeds are paid.
+                        </p>
+                      )}
+                  </div>
+
                   <div className="red-line" style={{ width: "100%" }}></div>
                   <div>
                     <p>Notes</p>
