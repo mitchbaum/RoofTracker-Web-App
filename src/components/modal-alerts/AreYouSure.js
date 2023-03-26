@@ -548,6 +548,7 @@ const AreYouSure = ({
             </p>
           )}
         {action === "Comfirm Missing Funds" &&
+          customMissingFunds == 0.0 &&
           fileData.coc * 1 +
             fileData.insCheckACVTotal * 1 -
             fileData.deductible * 1 <=
