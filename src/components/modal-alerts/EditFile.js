@@ -176,16 +176,22 @@ const EditFile = ({
     const snapshot = await getDocs(q);
     snapshot.forEach((doc) => {
       if (doc.data()?.missingFundsTotal) {
-        currentUserMissingFundsTotal = doc.data()?.missingFundsTotal;
+        currentUserMissingFundsTotal = doc.data()?.missingFundsTotal ?? 0.0;
       }
     });
-    await updateDoc(doc(db, `Users/${uid}`), {
-      missingFundsTotal:
-        currentUserMissingFundsTotal +
-        coc * 1 +
-        data.insCheckACVTotal * 1 -
-        deductible * 1,
-    });
+    if (customMissingFunds > 0) {
+      await updateDoc(doc(db, `Users/${uid}`), {
+        missingFundsTotal: currentUserMissingFundsTotal + customMissingFunds,
+      });
+    } else {
+      await updateDoc(doc(db, `Users/${uid}`), {
+        missingFundsTotal:
+          currentUserMissingFundsTotal +
+          coc * 1 +
+          data.insCheckACVTotal * 1 -
+          deductible * 1,
+      });
+    }
   };
 
   const updateCompanyTotalMissingFunds = async () => {
@@ -195,16 +201,22 @@ const EditFile = ({
     const snapshot = await getDocs(q);
     snapshot.forEach((doc) => {
       if (doc.data()?.missingFundsTotal) {
-        currentCompanyMissingFundsTotal = doc.data()?.missingFundsTotal;
+        currentCompanyMissingFundsTotal = doc.data()?.missingFundsTotal ?? 0.0;
       }
     });
-    await updateDoc(doc(db, `Companies/${companyId}`), {
-      missingFundsTotal:
-        currentCompanyMissingFundsTotal +
-        coc * 1 +
-        data.insCheckACVTotal * 1 -
-        deductible * 1,
-    });
+    if (customMissingFunds > 0) {
+      await updateDoc(doc(db, `Companies/${companyId}`), {
+        missingFundsTotal: currentCompanyMissingFundsTotal + customMissingFunds,
+      });
+    } else {
+      await updateDoc(doc(db, `Companies/${companyId}`), {
+        missingFundsTotal:
+          currentCompanyMissingFundsTotal +
+          coc * 1 +
+          data.insCheckACVTotal * 1 -
+          deductible * 1,
+      });
+    }
   };
 
   const uploadImage = async (fileId) => {

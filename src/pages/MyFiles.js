@@ -50,6 +50,7 @@ const MyFiles = () => {
       orderBy("modified", "desc"),
       limit(12)
     );
+    const querySnapshot = getDocs(q);
     onSnapshot(q, (querySnapshot) => {
       fetchFiles(
         querySnapshot.docs.map(

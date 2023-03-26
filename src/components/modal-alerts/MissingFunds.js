@@ -70,76 +70,79 @@ const MissingFunds = ({
           />
         )}
         <h1 className="header-large">Missing Funds Found</h1>
-        <p
-          className="error-message"
-          style={{ color: "#676767", display: "block" }}
-        >
-          The red flag on missing funds mean that the file is currently in
-          pursuit of collecting missing funds.
-        </p>
-        {filesWithMissingFunds.length > 0 && (
-          <div className="missing-funds-table-container">
-            <table style={{ tableLayout: "auto" }}>
-              <tbody>
-                <tr>
-                  <th style={{ width: "2%" }}></th>
-                  <th style={{ width: "48%" }}>Name</th>
-                  <th style={{ width: "50%" }}>Missing Funds Found</th>
-                  <th></th>
-                </tr>
-              </tbody>
 
-              {filesWithMissingFunds &&
-                filesWithMissingFunds
-                  .sort((a, b) => (a["modified"] < b["modified"] ? 1 : -1))
-                  .map((val, key) => {
-                    return (
-                      <tbody
-                        className="table-cells-container auto-cursor"
-                        key={key}
-                      >
-                        <tr
-                          className={
-                            val.missingFundsSwitch ? "flag-row" : undefined
-                          }
+        {filesWithMissingFunds.length > 0 && (
+          <>
+            <p
+              className="error-message"
+              style={{ color: "#676767", display: "block" }}
+            >
+              The red flag on missing funds mean that the file is currently in
+              pursuit of collecting missing funds.
+            </p>
+            <div className="missing-funds-table-container">
+              <table style={{ tableLayout: "auto" }}>
+                <tbody>
+                  <tr>
+                    <th style={{ width: "2%" }}></th>
+                    <th style={{ width: "48%" }}>Name</th>
+                    <th style={{ width: "50%" }}>Missing Funds Found</th>
+                    <th></th>
+                  </tr>
+                </tbody>
+
+                {filesWithMissingFunds &&
+                  filesWithMissingFunds
+                    .sort((a, b) => (a["modified"] < b["modified"] ? 1 : -1))
+                    .map((val, key) => {
+                      return (
+                        <tbody
+                          className="table-cells-container auto-cursor"
+                          key={key}
                         >
-                          <td></td>
-                          <td data-label="Name">
-                            {val.name !== "" ? val.name : "-"}
-                          </td>
-                          <td
-                            data-label="Missing Funds Found"
+                          <tr
                             className={
-                              val.missingFundsSwitch
-                                ? "flag-row-font-color"
-                                : undefined
+                              val.missingFundsSwitch ? "flag-row" : undefined
                             }
                           >
-                            {val.coc !== "" && val.deductible !== ""
-                              ? getCurrencyLabel(
-                                  `${val.missingFunds}`,
-                                  "Not available"
-                                )
-                              : "Not available"}
-                          </td>
-                          <td>
-                            <div className="row-actions">
-                              <FaTimes
-                                className="btn-animation center delete"
-                                onClick={() => {
-                                  setShowAlert(!showAlert);
-                                  setAction("Delete Missing Fund");
-                                  setItemData(val);
-                                }}
-                              />
-                            </div>
-                          </td>
-                        </tr>
-                      </tbody>
-                    );
-                  })}
-            </table>
-          </div>
+                            <td></td>
+                            <td data-label="Name">
+                              {val.name !== "" ? val.name : "-"}
+                            </td>
+                            <td
+                              data-label="Missing Funds Found"
+                              className={
+                                val.missingFundsSwitch
+                                  ? "flag-row-font-color"
+                                  : undefined
+                              }
+                            >
+                              {val.coc !== "" && val.deductible !== ""
+                                ? getCurrencyLabel(
+                                    `${val.missingFunds}`,
+                                    "Not available"
+                                  )
+                                : "Not available"}
+                            </td>
+                            <td>
+                              <div className="row-actions">
+                                <FaTimes
+                                  className="btn-animation center delete"
+                                  onClick={() => {
+                                    setShowAlert(!showAlert);
+                                    setAction("Delete Missing Fund");
+                                    setItemData(val);
+                                  }}
+                                />
+                              </div>
+                            </td>
+                          </tr>
+                        </tbody>
+                      );
+                    })}
+              </table>
+            </div>
+          </>
         )}
         <div className="" style={{ margin: "1rem 0rem" }}>
           {filesWithMissingFunds.length == 0 && (

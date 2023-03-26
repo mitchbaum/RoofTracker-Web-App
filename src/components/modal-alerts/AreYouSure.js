@@ -95,13 +95,14 @@ const AreYouSure = ({
       fileData.coc * 1 +
         fileData.insCheckACVTotal * 1 -
         fileData.deductible * 1 <=
-        0
+        0 &&
+      customMissingFunds == 0.0
     ) {
       missingFunds(false);
       return onClose(false);
     } else if (action == "Comfirm Missing Funds" && customMissingFunds > 0) {
       missingFunds(true);
-      customFunds(customMissingFunds);
+      customFunds(customMissingFunds * 1);
       return onClose(false);
     } else if (action == "Comfirm Missing Funds" && !missingFundsSwitch) {
       missingFunds(true);
@@ -305,7 +306,7 @@ const AreYouSure = ({
       });
   };
 
-  const customMissingFundsAmount = (missingFunds) => {
+  const customMissingFundsAmount = () => {
     showCustomEntry += 1;
     if (showCustomEntry == 5) {
       console.log("found me!");
@@ -490,13 +491,7 @@ const AreYouSure = ({
                     className="error-message"
                     style={{ color: "#676767", display: "block" }}
                     onClick={() => {
-                      customMissingFundsAmount(
-                        `${
-                          fileData.coc * 1 +
-                          fileData.insCheckACVTotal * 1 -
-                          fileData.deductible * 1
-                        }`
-                      );
+                      customMissingFundsAmount();
                     }}
                   >
                     {showCustom
