@@ -507,8 +507,8 @@ const AreYouSure = ({
                         <CurrencyInput
                           id="invoice-input"
                           allowNegativeValue={false}
-                          name="invoice"
-                          placeholder="Enter invoice"
+                          name="missing-funds"
+                          placeholder="Enter missing funds"
                           prefix="$"
                           decimalsLimit={2}
                           decimalSeparator="."

@@ -48,7 +48,6 @@ const EditFile = ({
     data.missingFundsSwitch ?? false
   );
   const [customMissingFunds, setCustomMissingFunds] = useState(0.0);
-  const [invoice, setInvoice] = useState(data.invoice ?? "");
   const [note, setNote] = useState(data.note ?? "");
   const [type, setType] = useState(data.type ?? "");
   const [cocSwitch, setCocSwitch] = useState(data.cocSwitch ?? "");
@@ -98,11 +97,6 @@ const EditFile = ({
     if (coc !== data.coc) {
       await updateDoc(doc(db, `Users/${uid}/Files/${fileId}`), {
         coc: coc ?? "",
-      });
-    }
-    if (invoice !== data.invoice) {
-      await updateDoc(doc(db, `Users/${uid}/Files/${fileId}`), {
-        invoice: invoice ?? "",
       });
     }
     if (note !== data.note) {
@@ -326,20 +320,6 @@ const EditFile = ({
                 decimalsLimit={2}
                 decimalSeparator="."
                 onValueChange={(value) => setCoc(value)}
-              />
-            </div>
-            <div className="input-group">
-              <label>Invoice Total</label>
-              <CurrencyInput
-                id="invoice-input"
-                allowNegativeValue={false}
-                name="invoice"
-                placeholder="Enter invoice"
-                defaultValue={invoice !== "" ? invoice * 1 : invoice}
-                prefix="$"
-                decimalsLimit={2}
-                decimalSeparator="."
-                onValueChange={(value) => setInvoice(value)}
               />
             </div>
             <div className="input-group" style={{ width: "100%" }}>

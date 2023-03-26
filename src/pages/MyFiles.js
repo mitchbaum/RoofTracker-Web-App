@@ -193,8 +193,7 @@ const MyFiles = () => {
               </div>
               <button
                 className="status-btn security-access show-summary-btn"
-                // onClick={() => setShowAddFile(!showAddFile)}
-                onClick={() => loadMoreFiles()}
+                onClick={() => setShowAddFile(!showAddFile)}
               >
                 Add File
               </button>

@@ -30,7 +30,6 @@ const AddFile = ({ onAdd, open, onClose, uid, permission }) => {
   const [name, setName] = useState("");
   const [deductible, setDeductible] = useState("");
   const [coc, setCoc] = useState("");
-  const [invoice, setInvoice] = useState("");
   const [note, setNote] = useState("");
   const [type, setType] = useState("Open");
   const [cocSwitch, setCocSwitch] = useState(false);
@@ -67,7 +66,6 @@ const AddFile = ({ onAdd, open, onClose, uid, permission }) => {
       name,
       deductible,
       coc,
-      invoice,
       note,
       type,
       cocSwitch,
@@ -192,19 +190,6 @@ const AddFile = ({ onAdd, open, onClose, uid, permission }) => {
                 decimalsLimit={2}
                 decimalSeparator="."
                 onValueChange={(value) => setCoc(`${value}`)}
-              />
-            </div>
-            <div className="input-group">
-              <label>Invoice Total</label>
-              <CurrencyInput
-                id="invoice-input"
-                allowNegativeValue={false}
-                name="invoice"
-                placeholder="Enter invoice"
-                prefix="$"
-                decimalsLimit={2}
-                decimalSeparator="."
-                onValueChange={(value) => setInvoice(`${value}`)}
               />
             </div>
             <div className="input-group" style={{ width: "100%" }}>
