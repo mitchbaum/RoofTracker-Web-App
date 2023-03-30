@@ -44,7 +44,7 @@ const Settings = () => {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [missingFundsTotal, setMissingFundsTotal] = useState("");
+  const [missingFundsTotal, setMissingFundsTotal] = useState(0.0);
   const [company, setCompany] = useState("");
   const [companyId, setCompanyId] = useState("");
   const [code, setCode] = useState("");
@@ -65,7 +65,7 @@ const Settings = () => {
     onSnapshot(doc(db, "Users", `${user?.uid}`), (doc) => {
       setName(doc.data()?.name);
       setEmail(doc.data()?.email);
-      setMissingFundsTotal(doc.data()?.missingFundsTotal);
+      setMissingFundsTotal(doc.data()?.missingFundsTotal ?? 0.0);
 
       setAccess(doc.data()?.access);
       setPermission(doc.data()?.permission);
