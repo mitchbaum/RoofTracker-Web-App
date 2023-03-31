@@ -29,6 +29,8 @@ const MyFiles = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [isPending, setisPending] = useState(true);
+  const [message, setMessage] = useState(true);
+  const [isSearching, setIsSearching] = useState(false);
   const [error, setError] = useState("");
   const [showAddFile, setShowAddFile] = useState(false);
   const [access, setAccess] = useState("");
@@ -38,43 +40,58 @@ const MyFiles = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (searchTerm == "") {
+      setMessage("");
+      setIsSearching(false);
+      loadFiles();
+    } else {
+      setMessage("Click 'Search' to search for a file");
+    }
+  }, [searchTerm]);
+
+  useEffect(() => {
     onSnapshot(doc(db, "Users", `${user?.uid}`), (doc) => {
       setAccess(doc.data()?.access);
     });
   }, [user?.uid]);
 
   useEffect(() => {
-    const q = query(
-      collection(db, `Users/${user?.uid}/Files`),
-      where("type", "==", filterBy),
-      orderBy("modified", "desc"),
-      limit(12)
-    );
-    const querySnapshot = getDocs(q);
-    onSnapshot(q, (querySnapshot) => {
-      fetchFiles(
-        querySnapshot.docs.map(
-          (doc) => ({
-            ...doc.data(),
-            id: doc.id,
-          }),
-          (error) => {
-            setisPending(false);
-            return setError(
-              "Error occured loading your files. Double check your connection and try again. If error persists, contact Roof Tracker support."
-            );
-          }
-        ),
-        true
-      );
-      setShowAddFile(false);
-    });
+    loadFiles();
   }, [user?.uid, filterBy]);
 
   const clicked = (val) => {
     // Here
     console.log(`Take me to ${val.name}`);
     navigate(`/file-information/${user?.uid}/${val.id}`);
+  };
+
+  const loadFiles = () => {
+    if (searchTerm == "") {
+      const q = query(
+        collection(db, `Users/${user?.uid}/Files`),
+        where("type", "==", filterBy),
+        orderBy("modified", "desc"),
+        limit(12)
+      );
+      onSnapshot(q, (querySnapshot) => {
+        fetchFiles(
+          querySnapshot.docs.map(
+            (doc) => ({
+              ...doc.data(),
+              id: doc.id,
+            }),
+            (error) => {
+              setisPending(false);
+              return setError(
+                "Error occured loading your files. Double check your connection and try again. If error persists, contact Roof Tracker support."
+              );
+            }
+          ),
+          true
+        );
+        setShowAddFile(false);
+      });
+    }
   };
 
   const loadMoreFiles = () => {
@@ -106,6 +123,35 @@ const MyFiles = () => {
     });
   };
 
+  const searchFiles = () => {
+    console.log(searchTerm);
+    setMessage("");
+    setIsSearching(true);
+    const q = query(
+      collection(db, `Users/${user?.uid}/Files`),
+      where("name", ">=", searchTerm),
+      where("name", "<=", searchTerm + "\uf8FF")
+    );
+    onSnapshot(q, (querySnapshot) => {
+      fetchFiles(
+        querySnapshot.docs.map(
+          (doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }),
+          (error) => {
+            setisPending(false);
+            return setError(
+              "Error occured loading your files. Double check your connection and try again. If error persists, contact Roof Tracker support."
+            );
+          }
+        ),
+        true
+      );
+      setShowAddFile(false);
+    });
+  };
+
   const fetchFiles = (files, resetData) => {
     var data;
     if (resetData) {
@@ -117,6 +163,7 @@ const MyFiles = () => {
       data.push(result);
     });
     setisPending(false);
+    console.log(data);
     if (data.length == 0) {
       // clear the state when no files are found
       setFilesData(data);
@@ -169,9 +216,8 @@ const MyFiles = () => {
                 type="text"
                 className="search"
                 placeholder="Search..."
-                onChange={(event) => {
-                  setSearchTerm(event.target.value);
-                }}
+                value={searchTerm}
+                onChange={(event) => setSearchTerm(event.target.value)}
               />
               <div style={{ width: "2rem" }}></div>
               <div className="input-group" style={{ margin: "0" }}>
@@ -193,11 +239,21 @@ const MyFiles = () => {
                 </select>
               </div>
               <button
-                className="status-btn security-access show-summary-btn"
-                onClick={() => setShowAddFile(!showAddFile)}
+                className="status-btn deactivate show-summary-btn"
+                onClick={() => searchFiles()}
               >
-                Add File
+                Search
               </button>
+              {searchTerm === "" && (
+                <button
+                  className="status-btn security-access show-summary-btn"
+                  onClick={() => {
+                    setShowAddFile(!showAddFile);
+                  }}
+                >
+                  Add File
+                </button>
+              )}
             </div>
           </div>
           {filesData.length > 0 && (
@@ -228,24 +284,10 @@ const MyFiles = () => {
                         : -1
                     )
                     .filter((val) => {
-                      if (searchTerm != "") {
-                        if (
-                          val.name
-                            .toString()
-                            .toLowerCase()
-                            .includes(searchTerm.toLowerCase())
-                        ) {
-                          return val;
-                        }
-                      } else if (searchTerm == "") {
-                        if (
-                          val.type
-                            .toString()
-                            .toLowerCase()
-                            .includes(filterBy.toLowerCase())
-                        ) {
-                          return val;
-                        }
+                      if (searchTerm === "" && !isSearching) {
+                        return val;
+                      } else if (searchTerm !== "" && isSearching) {
+                        return val;
                       }
                     })
                     .map((val, key) => {
@@ -329,6 +371,9 @@ const MyFiles = () => {
               visible={showSpinner}
             />
           </div>
+          <p className="header" style={{ color: "#676767", display: "block" }}>
+            {message}
+          </p>
           <div className="header" style={{ marginTop: "1rem" }}>
             {filesData.length == 0 && (
               <div style={{ color: "#d30b0e" }}>{error}</div>
