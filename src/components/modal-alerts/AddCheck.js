@@ -50,7 +50,7 @@ const AddCheck = ({
       date === itemData.checkDate &&
       type === itemData.itemType
     ) {
-      setMessage("No changes made");
+      return setMessage("No changes made");
     }
 
     let verifyDateEntry = moment(date, "MMDDYYYY").format("MM-DD-YYYY");
