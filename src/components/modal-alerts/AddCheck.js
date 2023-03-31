@@ -52,20 +52,18 @@ const AddCheck = ({
     ) {
       return setMessage("No changes made");
     }
-
     let verifyDateEntry = moment(date, "MMDDYYYY").format("MM-DD-YYYY");
+    var dateInput = date;
     if (date.length !== 0) {
-      if (
-        verifyDateEntry !== "Invalid date" &&
-        (date.length === 4 || date.length === 8)
-      ) {
-        console.log(true);
+      if (verifyDateEntry !== "Invalid date") {
+        if (date.length == 4) {
+          dateInput = date + moment().format("yyyy");
+        }
       } else {
         setMessage("");
         return setError("Invalid date. Format: MMdd or MMddyyyy");
       }
     }
-
     if (type === "") {
       setMessage("");
       return setError("No check type selected");
@@ -77,7 +75,7 @@ const AddCheck = ({
       editItem(
         {
           checkAmount: amount,
-          checkDate: date,
+          checkDate: dateInput,
           fileId: fileId,
           itemName: name,
           itemType: type,
@@ -88,7 +86,7 @@ const AddCheck = ({
       addItem(
         {
           checkAmount: amount,
-          checkDate: date,
+          checkDate: dateInput,
           fileId: fileId,
           itemName: name,
           itemType: type,
@@ -124,14 +122,15 @@ const AddCheck = ({
   };
 
   const editItem = async (item, timestamp) => {
+    console.log(item.checkDate);
     // update doc in Firebase
     updateDoc(
       doc(db, `Users/${uid}/Files/${fileId}/FileInformation/${itemData.id}`),
       {
-        checkAmount: amount ?? "",
-        checkDate: date,
-        itemName: name,
-        itemType: type,
+        checkAmount: item.checkAmount ?? "",
+        checkDate: item.checkDate,
+        itemName: item.itemName,
+        itemType: item.itemType,
       }
     ).then(() => {
       updateDoc(doc(db, `Users/${uid}/Files/${fileId}`), {
