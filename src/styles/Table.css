@@ -93,13 +93,18 @@ table td {
   display: flex;
   justify-content: center;
 }
-
+@media screen and (max-width: 1100px) {
+  .table-container {
+    margin: 1rem 2rem 2rem 2rem;
+  }
+}
 @media screen and (max-width: 600px) {
   .missing-funds-table-container {
     margin: 1rem 0;
     min-width: 90%;
     min-height: 400px;
   }
+
   .table-container {
     margin: 1rem 1rem 2rem 1rem;
   }

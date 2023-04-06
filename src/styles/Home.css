@@ -31,7 +31,14 @@
   border-radius: 5px;
   margin-top: 1rem;
 }
-
+@media screen and (max-width: 1100px) {
+  .home-header {
+    margin: 2rem 2rem 0rem 2rem;
+  }
+  .card-container {
+    margin: 2rem 2rem 0rem 2rem;
+  }
+}
 @media only screen and (max-width: 700px) {
   .media-hide {
     display: block;
