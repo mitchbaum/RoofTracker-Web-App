@@ -45,7 +45,7 @@ const MyFiles = () => {
       setIsSearching(false);
       loadFiles();
     } else {
-      setMessage("Click 'Search' to search for a file");
+      setMessage("Click 'Search' to search for a file (case sensitive)");
     }
   }, [searchTerm]);
 
@@ -238,13 +238,8 @@ const MyFiles = () => {
                   </option>
                 </select>
               </div>
-              <button
-                className="status-btn deactivate show-summary-btn"
-                onClick={() => searchFiles()}
-              >
-                Search
-              </button>
-              {searchTerm === "" && (
+
+              {searchTerm === "" ? (
                 <button
                   className="status-btn security-access show-summary-btn"
                   onClick={() => {
@@ -252,6 +247,13 @@ const MyFiles = () => {
                   }}
                 >
                   Add File
+                </button>
+              ) : (
+                <button
+                  className="status-btn deactivate show-summary-btn"
+                  onClick={() => searchFiles()}
+                >
+                  Search
                 </button>
               )}
             </div>

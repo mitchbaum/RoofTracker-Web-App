@@ -65,9 +65,9 @@ function Home() {
 
   useEffect(() => {
     onSnapshot(doc(db, "Companies", `${companyId}`), (doc) => {
-      setCompanyMissingFunds(doc.data()?.missingFundsTotal);
+      setCompanyMissingFunds(doc.data()?.missingFundsTotal ?? 0.0);
     });
-  }, [user?.uid, companyId]);
+  }, [companyId]);
 
   //get tasks
   useEffect(() => {
