@@ -28,7 +28,6 @@ import {
 import { UserAuth } from "../context/AuthContext";
 import { db } from "../firebase";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
-import Login from "./sign in/Login";
 import PleaseLogin from "../components/error-pages/PleaseLogin";
 
 function Home() {
@@ -50,6 +49,7 @@ function Home() {
   const [isPending, setisPending] = useState(true);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
 
   const [companyMissingFunds, setCompanyMissingFunds] = useState(0.0);
 
@@ -65,6 +65,7 @@ function Home() {
 
   useEffect(() => {
     onSnapshot(doc(db, "Companies", `${companyId}`), (doc) => {
+      // console.log(doc.data());
       setCompanyMissingFunds(doc.data()?.missingFundsTotal ?? 0.0);
     });
   }, [companyId]);
@@ -91,11 +92,23 @@ function Home() {
     }
   }, [companyId]);
 
+  useEffect(() => {
+    if (searchTerm === "") {
+      setMessage("");
+      setIsSearching(false);
+      fetchTeam(companyId, filterBy, filterByModified, searchTerm);
+      console.log("here");
+    } else {
+      setMessage("Click 'Search' to search for a file (case sensitive)");
+    }
+  }, [searchTerm]);
+
   //get members
   useEffect(() => {
     if (didMount === false && access !== "User" && access !== "Inactive") {
-      fetchTeam(companyId, filterBy, filterByModified);
+      fetchTeam(companyId, filterBy, filterByModified, searchTerm);
     }
+    console.log("here2");
   }, [companyId, filterBy, filterByModified]);
 
   const fetchTasks = async (tasks) => {
@@ -106,7 +119,7 @@ function Home() {
     setTasksData(data);
   };
 
-  const fetchTeam = async (cid, filter, filterModified) => {
+  const fetchTeam = async (cid, filter, filterModified, searchTerm) => {
     if (cid) {
       setError("");
       setMessage("Loading...");
@@ -131,16 +144,27 @@ function Home() {
       );
       results.forEach(async (result) => {
         const collectionRef = collection(db, `Users/${result.uid}/Files`);
-        const q = query(
-          collectionRef,
-          where("type", "==", filter),
-          where(
-            "modified",
-            ">",
-            new Date(Date.now() - filterModified * 60 * 1000)
-          ) // 30 minutes before current time ref: https://medium.com/firebase-developers/the-secrets-of-firestore-fieldvalue-servertimestamp-revealed-29dd7a38a82b
-        );
-        //const q = query(collectionRef, where("type", "!=", ""));
+        var q;
+        console.log(searchTerm);
+        if (searchTerm !== "" && searchTerm) {
+          setIsSearching(true);
+          q = query(
+            collectionRef,
+            where("name", ">=", searchTerm),
+            where("name", "<=", searchTerm + "\uf8FF")
+          );
+        } else {
+          q = query(
+            collectionRef,
+            where("type", "==", filter),
+            where(
+              "modified",
+              ">",
+              new Date(Date.now() - filterModified * 60 * 1000)
+            ) // 30 minutes before current time ref: https://medium.com/firebase-developers/the-secrets-of-firestore-fieldvalue-servertimestamp-revealed-29dd7a38a82b
+          );
+          //const q = query(collectionRef, where("type", "!=", ""));
+        }
 
         const snapshot = await getDocs(q);
 
@@ -166,8 +190,9 @@ function Home() {
     }
   };
 
-  const fetchFiles = (files, owner, id) => {
+  const fetchFiles = (files, owner, id, resetData) => {
     setMessage("");
+    console.log(filesData);
     files.forEach(async (result) => {
       setFilesData((oldData) => [
         ...oldData,
@@ -177,9 +202,6 @@ function Home() {
     // console.log(id);
     //console.log(files);
     setisPending(false);
-    if (filesData.length == 0) {
-      return setError("No files found");
-    }
     return;
   };
 
@@ -282,7 +304,11 @@ function Home() {
                 className="header"
                 style={{ marginTop: "0", marginLeft: "0rem" }}
               >
-                <p className="header-small">Recent Activity</p>
+                {searchTerm === "" ? (
+                  <p className="header-small">Recent Activity</p>
+                ) : (
+                  <p className="header-small">Company File Directory</p>
+                )}
               </div>
               <div className="flex-space-between">
                 <input
@@ -296,54 +322,80 @@ function Home() {
                     }
                   }}
                 />
-                <div style={{ width: "2rem" }}></div>
-                <div className="input-group">
-                  <select
-                    value={filterBy}
-                    onChange={(e) => {
-                      setFilterBy(e.target.value);
-                      fetchTeam(companyId, e.target.value, filterByModified);
-                    }}
-                    style={{ width: "100%" }}
-                  >
-                    <option disabled={true} value="">
-                      Filter by job status...
-                    </option>
-                    <option key="1" value="Open">
-                      Open
-                    </option>
-                    <option key="2" value="Closed">
-                      Closed
-                    </option>
-                  </select>
-                </div>
-                <div style={{ width: "2rem" }}></div>
-                <div className="input-group">
-                  <select
-                    value={filterByModified}
-                    onChange={(e) => {
-                      setFilterByModified(e.target.value);
-                      fetchTeam(companyId, filterBy, e.target.value);
-                    }}
-                    style={{ width: "100%" }}
-                  >
-                    <option disabled={true} value="">
-                      Filter by recently modified...
-                    </option>
-                    <option key="1" value="720">
-                      12 Hours
-                    </option>
-                    <option key="2" value="1440">
-                      24 Hours
-                    </option>
-                    <option key="3" value="4320">
-                      72 Hours
-                    </option>
-                    <option key="5" value="1051200">
-                      All
-                    </option>
-                  </select>
-                </div>
+
+                {searchTerm === "" ? (
+                  <>
+                    <div style={{ width: "2rem" }}></div>
+                    <div className="input-group">
+                      <select
+                        value={filterBy}
+                        onChange={(e) => {
+                          setFilterBy(e.target.value);
+                          fetchTeam(
+                            companyId,
+                            e.target.value,
+                            filterByModified
+                          );
+                        }}
+                        style={{ width: "100%" }}
+                      >
+                        <option disabled={true} value="">
+                          Filter by job status...
+                        </option>
+                        <option key="1" value="Open">
+                          Open
+                        </option>
+                        <option key="2" value="Closed">
+                          Closed
+                        </option>
+                      </select>
+                    </div>
+                    <div style={{ width: "2rem" }}></div>
+                    <div className="input-group">
+                      <select
+                        value={filterByModified}
+                        onChange={(e) => {
+                          setFilterByModified(e.target.value);
+                          fetchTeam(companyId, filterBy, e.target.value);
+                        }}
+                        style={{ width: "100%" }}
+                      >
+                        <option disabled={true} value="">
+                          Filter by recently modified...
+                        </option>
+                        <option key="1" value="720">
+                          12 Hours
+                        </option>
+                        <option key="2" value="1440">
+                          24 Hours
+                        </option>
+                        <option key="3" value="4320">
+                          72 Hours
+                        </option>
+                        <option key="5" value="1051200">
+                          All
+                        </option>
+                      </select>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      className="status-btn deactivate show-summary-btn"
+                      style={{ marginTop: "10px" }}
+                      onClick={() =>
+                        fetchTeam(
+                          companyId,
+                          filterBy,
+                          filterByModified,
+                          searchTerm
+                        )
+                      }
+                    >
+                      Search
+                    </button>
+                  </>
+                )}
               </div>
               <div className="flex-end"></div>
 
@@ -393,14 +445,9 @@ function Home() {
                             : -1
                         )
                         .filter((val) => {
-                          if (searchTerm == "") {
+                          if (searchTerm === "" && !isSearching) {
                             return val;
-                          } else if (
-                            val.name
-                              .toString()
-                              .toLowerCase()
-                              .includes(searchTerm.toLowerCase())
-                          ) {
+                          } else if (searchTerm !== "" && isSearching) {
                             return val;
                           }
                         })
@@ -480,7 +527,10 @@ function Home() {
                 </div>
               )}
               <div className="header" style={{ margin: "1rem 0 0 0" }}>
-                {filesData.length == 0 && (
+                {filesData.length == 0 && message !== "Loading..." && (
+                  <div style={{ color: "#d30b0e" }}>No files found</div>
+                )}
+                {error !== "" && (
                   <div style={{ color: "#d30b0e" }}>{error}</div>
                 )}
                 <p
