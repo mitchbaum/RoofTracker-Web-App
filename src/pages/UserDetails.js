@@ -35,6 +35,8 @@ const UserDetails = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [error, setError] = useState(null);
   const [isPending, setIsPending] = useState(true);
+  const [message, setMessage] = useState(true);
+  const [isSearching, setIsSearching] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [showAddFile, setShowAddFile] = useState(false);
   const [action, setAction] = useState("");
@@ -53,6 +55,16 @@ const UserDetails = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (searchTerm == "") {
+      setMessage("");
+      setIsSearching(false);
+      loadFiles();
+    } else {
+      setMessage("Click 'Search' to search for a file (case sensitive)");
+    }
+  }, [searchTerm]);
+
+  useEffect(() => {
     onSnapshot(doc(db, "Users", `${user.uid}`), (doc) => {
       setPermission(doc.data()?.permission);
       setAdminAccess(doc.data()?.access);
@@ -69,6 +81,10 @@ const UserDetails = () => {
   }, [user?.uid]);
 
   useEffect(() => {
+    loadFiles();
+  }, [user?.uid, filterBy]);
+
+  const loadFiles = () => {
     const collectionRef = collection(db, `Users/${uid}/Files`);
     const q = query(
       collectionRef,
@@ -94,7 +110,7 @@ const UserDetails = () => {
       );
       setShowAddFile(false);
     });
-  }, [user?.uid, filterBy]);
+  };
 
   const loadMoreFiles = () => {
     setShowSpinner(true);
@@ -121,6 +137,35 @@ const UserDetails = () => {
           }
         ),
         false
+      );
+      setShowAddFile(false);
+    });
+  };
+
+  const searchFiles = () => {
+    console.log(searchTerm);
+    setMessage("");
+    setIsSearching(true);
+    const q = query(
+      collection(db, `Users/${uid}/Files`),
+      where("name", ">=", searchTerm),
+      where("name", "<=", searchTerm + "\uf8FF")
+    );
+    onSnapshot(q, (querySnapshot) => {
+      fetchFiles(
+        querySnapshot.docs.map(
+          (doc) => ({
+            ...doc.data(),
+            id: doc.id,
+          }),
+          (error) => {
+            setIsPending(false);
+            return setError(
+              "Error occured loading your files. Double check your connection and try again. If error persists, contact Roof Tracker support."
+            );
+          }
+        ),
+        true
       );
       setShowAddFile(false);
     });
@@ -391,12 +436,19 @@ const UserDetails = () => {
                   </option>
                 </select>
               </div>
-              {adminAccess !== "User" && (
+              {adminAccess !== "User" && searchTerm === "" ? (
                 <button
                   className="status-btn security-access show-summary-btn"
                   onClick={() => setShowAddFile(!showAddFile)}
                 >
                   Add File
+                </button>
+              ) : (
+                <button
+                  className="status-btn deactivate show-summary-btn"
+                  onClick={() => searchFiles()}
+                >
+                  Search
                 </button>
               )}
             </div>
@@ -433,14 +485,9 @@ const UserDetails = () => {
                           : -1
                       )
                       .filter((val) => {
-                        if (searchTerm == "") {
+                        if (searchTerm === "" && !isSearching) {
                           return val;
-                        } else if (
-                          val.name
-                            .toString()
-                            .toLowerCase()
-                            .includes(searchTerm.toLowerCase())
-                        ) {
+                        } else if (searchTerm !== "" && isSearching) {
                           return val;
                         }
                       })
@@ -453,7 +500,7 @@ const UserDetails = () => {
                           >
                             <tr
                               className={
-                                val.missingFundsSwitch ? "flag-row" : undefined
+                                val.missingFundsSwitch ? "flag-row" : ""
                               }
                             >
                               <td style={{ padding: "15px" }}>
@@ -474,7 +521,7 @@ const UserDetails = () => {
                                 className={
                                   val.missingFundsSwitch
                                     ? "flag-row-font-color"
-                                    : undefined
+                                    : ""
                                 }
                               >
                                 {val.coc !== "" && val.deductible !== ""
@@ -528,12 +575,16 @@ const UserDetails = () => {
             <></>
           )}
 
-          <div className="header">
-            {isPending && <AccountDetailsTemp />}
+          <div className="header" style={{ marginTop: "1rem" }}>
             {filesData.length == 0 && (
               <div style={{ color: "#d30b0e" }}>{error}</div>
             )}
-            {/* {isPending && <div style={{ color: "#777676" }}>Loading...</div>} */}
+            <div
+              className="error-message"
+              style={{ color: "#676767", display: "block" }}
+            >
+              {message}
+            </div>
             {isPending && <TableTemp />}
           </div>
         </>
