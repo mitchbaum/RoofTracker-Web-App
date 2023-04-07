@@ -300,9 +300,7 @@ const MyFiles = () => {
                           key={key}
                         >
                           <tr
-                            className={
-                              val.missingFundsSwitch ? "flag-row" : undefined
-                            }
+                            className={val.missingFundsSwitch ? "flag-row" : ""}
                           >
                             <td style={{ padding: "15px" }}>
                               <img
@@ -322,7 +320,7 @@ const MyFiles = () => {
                               className={
                                 val.missingFundsSwitch
                                   ? "flag-row-font-color"
-                                  : undefined
+                                  : ""
                               }
                             >
                               {val.coc !== "" && val.deductible !== ""

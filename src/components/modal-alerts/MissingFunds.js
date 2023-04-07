@@ -101,9 +101,7 @@ const MissingFunds = ({
                           key={key}
                         >
                           <tr
-                            className={
-                              val.missingFundsSwitch ? "flag-row" : undefined
-                            }
+                            className={val.missingFundsSwitch ? "flag-row" : ""}
                           >
                             <td></td>
                             <td data-label="Name">
@@ -114,7 +112,7 @@ const MissingFunds = ({
                               className={
                                 val.missingFundsSwitch
                                   ? "flag-row-font-color"
-                                  : undefined
+                                  : ""
                               }
                             >
                               {val.coc !== "" && val.deductible !== ""

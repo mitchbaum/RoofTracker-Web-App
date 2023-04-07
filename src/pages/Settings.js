@@ -495,7 +495,6 @@ const Settings = () => {
                       <input
                         type="number"
                         name="reg-company-code"
-                        value={enterRegCode}
                         placeholder="Enter 6 digit registration code"
                         onChange={(e) => {
                           setIsEditing(true);

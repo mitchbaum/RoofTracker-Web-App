@@ -460,9 +460,7 @@ function Home() {
                             >
                               <tr
                                 className={
-                                  val.missingFundsSwitch
-                                    ? "flag-row"
-                                    : undefined
+                                  val.missingFundsSwitch ? "flag-row" : ""
                                 }
                               >
                                 <td style={{ padding: "15px" }}>
@@ -483,7 +481,7 @@ function Home() {
                                   className={
                                     val.missingFundsSwitch
                                       ? "flag-row-font-color"
-                                      : undefined
+                                      : ""
                                   }
                                 >
                                   {val.coc !== "" && val.deductible !== ""
