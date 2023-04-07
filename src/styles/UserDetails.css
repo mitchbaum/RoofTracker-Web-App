@@ -167,6 +167,9 @@ input[type="file"]::file-selector-button:hover {
   .account-info-container {
     margin: 1rem 2rem 2rem 2rem;
   }
+  .save-container {
+    margin-right: 2rem;
+  }
 }
 
 @media screen and (max-width: 600px) {
