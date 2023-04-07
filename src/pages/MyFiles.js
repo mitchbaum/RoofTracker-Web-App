@@ -373,13 +373,16 @@ const MyFiles = () => {
               visible={showSpinner}
             />
           </div>
-          <p className="header" style={{ color: "#676767", display: "block" }}>
-            {message}
-          </p>
           <div className="header" style={{ marginTop: "1rem" }}>
             {filesData.length == 0 && (
               <div style={{ color: "#d30b0e" }}>{error}</div>
             )}
+            <div
+              className="error-message"
+              style={{ color: "#676767", display: "block" }}
+            >
+              {message}
+            </div>
             {isPending && <TableTemp />}
           </div>
         </>
