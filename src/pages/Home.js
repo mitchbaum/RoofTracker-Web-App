@@ -495,7 +495,7 @@ function Home() {
                                       )
                                     : "N/A"}
                                 </td>
-                                <td data-label="s">
+                                <td data-label="Final COC">
                                   {val.cocSwitch ? (
                                     <div>Yes</div>
                                   ) : (
