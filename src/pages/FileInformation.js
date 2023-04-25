@@ -749,7 +749,7 @@ const FileInformation = () => {
                           className="FI-message"
                           style={{ color: "#d30b0e" }}
                         >
-                          (COC - Credit)
+                          (COC + Cash Work - Credit)
                         </span>
                       </p>
                     ) : (
@@ -759,12 +759,21 @@ const FileInformation = () => {
                       {creditItemTotal !== 0.0 && fileData.coc !== "" ? (
                         <>
                           {getCurrencyLabel(
-                            `${fileData.coc * 1 - creditItemTotal}`,
+                            `${
+                              fileData.coc * 1 +
+                              fileData.cashItemTotal * 1 -
+                              creditItemTotal
+                            }`,
                             ""
                           )}
                         </>
                       ) : (
-                        <>{getCurrencyLabel(fileData.coc, "")}</>
+                        <>
+                          {getCurrencyLabel(
+                            `${fileData.coc * 1 + fileData.cashItemTotal * 1}`,
+                            ""
+                          )}
+                        </>
                       )}
                     </p>
                   </div>
