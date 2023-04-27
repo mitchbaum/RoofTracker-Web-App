@@ -256,6 +256,7 @@ const EditFile = ({
   const uploadPdf = async (fileId) => {
     // handle deleting a pdf
     if (pdfData === "" && !pdfTitle) {
+      console.log("deleting pdf from storage");
       // try removing pdf from storage
       await removePdf(fileId);
       console.log("saving file with no pdf selected");
@@ -267,17 +268,18 @@ const EditFile = ({
       await removePdf(fileId);
       // replace with new pdf
     }
-
-    const pdfRef = ref(storage, `${uid}/Invoices/${pdfData.name}`);
-    await uploadBytes(pdfRef, pdfData).then((snapshot) => {
-      // run this function when upload is complete
-      updateDoc(doc(db, `Users/${uid}/Files`, fileId), {
-        invoiceUpload: pdfData.name,
+    if (pdfData !== "") {
+      const pdfRef = ref(storage, `${uid}/Invoices/${pdfData.name}`);
+      await uploadBytes(pdfRef, pdfData).then((snapshot) => {
+        // run this function when upload is complete
+        updateDoc(doc(db, `Users/${uid}/Files`, fileId), {
+          invoiceUpload: pdfData.name,
+        });
+        console.log(pdfData);
+        console.log(pdfData.name);
+        return;
       });
-      console.log(pdfData);
-      console.log(pdfData.name);
-      return;
-    });
+    }
   };
 
   const removePdf = async (fileId) => {

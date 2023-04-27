@@ -119,6 +119,16 @@
 .tooltip:hover {
   cursor: pointer;
 }
+
+.link {
+  color: #d30b0e;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.link:hover {
+  color: #e60000;
+}
+
 @media screen and (max-width: 1100px) {
   .top-two-card-container {
     margin: 1rem 2rem 2rem 2rem;

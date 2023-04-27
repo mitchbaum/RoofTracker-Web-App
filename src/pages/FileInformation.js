@@ -22,6 +22,8 @@ import {
   getDocs,
   updateDoc,
 } from "firebase/firestore";
+import { ref, getDownloadURL } from "firebase/storage";
+import { storage } from "../firebase";
 import AreYouSure from "../components/modal-alerts/AreYouSure";
 import { useNavigate } from "react-router-dom";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
@@ -204,6 +206,13 @@ const FileInformation = () => {
   //     setCopySuccess("");
   //   }, 2000);
   // };
+
+  const openPdf = () => {
+    const pdfRef = ref(storage, `${uid}/Invoices/${fileData.invoiceUpload}`);
+    getDownloadURL(pdfRef).then((url) => {
+      window.open(url, "_blank");
+    });
+  };
 
   return (
     <>
@@ -579,14 +588,17 @@ const FileInformation = () => {
                         </span>
                       )}
                       {fileData.invoiceUpload !== null && (
-                        <span style={{ margin: "none" }} className="pdf-label">
+                        <span style={{ margin: "none" }} className="link">
                           <GrAttachment />
-                          <a
+                          <span
                             style={{ marginLeft: "5px" }}
-                            href="www.google.com"
+                            className="link"
+                            onClick={() => {
+                              openPdf();
+                            }}
                           >
                             {fileData.invoiceUpload}
-                          </a>
+                          </span>
                         </span>
                       )}
                     </div>
@@ -600,15 +612,18 @@ const FileInformation = () => {
                           In Pursuit of Missing Funds
                         </span>
                       )}
-                      {fileData.invoiceUpload !== "" && (
-                        <span style={{ margin: "none" }} className="pdf-label">
+                      {fileData.invoiceUpload !== null && (
+                        <span style={{ margin: "none" }} className="link">
                           <GrAttachment />
-                          <a
+                          <span
                             style={{ marginLeft: "5px" }}
-                            href="www.google.com"
+                            className="link"
+                            onClick={() => {
+                              openPdf();
+                            }}
                           >
                             {fileData.invoiceUpload}
-                          </a>
+                          </span>
                         </span>
                       )}
                     </div>
