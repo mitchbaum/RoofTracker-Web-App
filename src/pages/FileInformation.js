@@ -591,7 +591,7 @@ const FileInformation = () => {
                         fileData.invoiceUpload && (
                           <span style={{ margin: "none" }}>
                             <GrAttachment />
-                            <span
+                            <a
                               style={{ marginLeft: "5px" }}
                               className="link"
                               onClick={() => {
@@ -599,7 +599,7 @@ const FileInformation = () => {
                               }}
                             >
                               {fileData.invoiceUpload}
-                            </span>
+                            </a>
                           </span>
                         )}
                     </div>
