@@ -181,6 +181,26 @@ input[type="checkbox"] {
   cursor: pointer;
 }
 
+.file-upload-container {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+}
+.button-wrapper > input[type="file"] {
+  position: absolute;
+  z-index: -1;
+  top: 15px;
+  left: 20px;
+  font-size: 17px;
+  color: #b8b8b8;
+}
+.button-wrapper {
+  display: flex;
+  align-items: center;
+  margin-bottom: 26px;
+}
+
 .flex-space-between {
   display: flex;
   justify-content: space-between;

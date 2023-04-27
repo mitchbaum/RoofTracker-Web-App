@@ -53,6 +53,7 @@ const EditFile = ({
   const [cocSwitch, setCocSwitch] = useState(data.cocSwitch ?? "");
   const [showAlert, setShowAlert] = useState(false);
   const [action, setAction] = useState("");
+  const [pdf, setPdf] = useState("No file chosen");
 
   // This function will be triggered when the file field change and compress
   const imageChange = (e) => {
@@ -65,6 +66,13 @@ const EditFile = ({
           console.log("setting setImageData");
         },
       });
+    }
+  };
+
+  const pdfChange = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      console.log(e.target.files);
+      setPdf(e.target.files[0].name);
     }
   };
 
@@ -397,6 +405,25 @@ const EditFile = ({
                 <span style={{ display: "flex", alignItems: "center" }}>
                   In Pursuit of Missing Funds
                 </span>
+              </div>
+            </div>
+
+            <div className="file-upload-container">
+              <div className="button-wrapper">
+                <label
+                  className="status-btn security-access show-summary-btn"
+                  style={{ margin: "0 16px 0 0", textAlign: "center" }}
+                  for="pdf-input"
+                >
+                  Attach Invoice PDF
+                </label>
+                <input
+                  type="file"
+                  id="pdf-input"
+                  onChange={pdfChange}
+                  accept="application/pdf,application/vnd.ms-excel"
+                />
+                <p className="FI-message">{pdf}</p>
               </div>
             </div>
 
