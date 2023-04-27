@@ -17,6 +17,7 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { db } from "../../firebase";
+import { FaTimes } from "react-icons/fa";
 import Compressor from "compressorjs";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
 
@@ -33,6 +34,8 @@ const AddFile = ({ onAdd, open, onClose, uid, permission }) => {
   const [note, setNote] = useState("");
   const [type, setType] = useState("Open");
   const [cocSwitch, setCocSwitch] = useState(false);
+  const [pdfData, setPdfData] = useState("");
+  const [pdfTitle, setPdfTitle] = useState(null);
 
   if (!open) return null;
 
@@ -47,6 +50,13 @@ const AddFile = ({ onAdd, open, onClose, uid, permission }) => {
           console.log("setting setImageData");
         },
       });
+    }
+  };
+
+  const pdfChange = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      setPdfData(e.target.files[0]);
+      setPdfTitle(e.target.files[0].name);
     }
   };
 
@@ -90,6 +100,7 @@ const AddFile = ({ onAdd, open, onClose, uid, permission }) => {
     await setDoc(docRef, newFile)
       .then(async () => {
         await uploadImage(id);
+        await uploadPdf(id);
       })
       .catch((err) => {
         setMessage("");
@@ -112,6 +123,19 @@ const AddFile = ({ onAdd, open, onClose, uid, permission }) => {
       });
       return;
     });
+  };
+
+  const uploadPdf = async (fileId) => {
+    if (pdfData !== "") {
+      const pdfRef = ref(storage, `${uid}/Invoices/${pdfData.name}`);
+      await uploadBytes(pdfRef, pdfData).then((snapshot) => {
+        // run this function when upload is complete
+        updateDoc(doc(db, `Users/${uid}/Files`, fileId), {
+          invoiceUpload: pdfData.name,
+        });
+        return;
+      });
+    }
   };
 
   return (
@@ -229,6 +253,42 @@ const AddFile = ({ onAdd, open, onClose, uid, permission }) => {
                 <span style={{ display: "flex", alignItems: "center" }}>
                   Closed
                 </span>
+              </div>
+            </div>
+            <div className="file-upload-container">
+              <div className="button-wrapper">
+                <label
+                  className="status-btn security-access show-summary-btn"
+                  style={{ margin: "0 16px 0 0", textAlign: "center" }}
+                  for="pdf-input"
+                >
+                  Attach Invoice PDF
+                </label>
+                <input
+                  type="file"
+                  id="pdf-input"
+                  onChange={pdfChange}
+                  accept="application/pdf,application/vnd.ms-excel"
+                />
+                <div className="FI-message">
+                  {pdfTitle == null ? (
+                    "No invoice uploaded"
+                  ) : (
+                    <>
+                      <div style={{ display: "flex" }}>
+                        {pdfTitle}{" "}
+                        <FaTimes
+                          className="btn-animation center delete"
+                          style={{ marginLeft: "10px" }}
+                          onClick={() => {
+                            setPdfTitle(null);
+                            setPdfData("");
+                          }}
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
             <input
