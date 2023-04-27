@@ -578,6 +578,17 @@ const FileInformation = () => {
                           In Pursuit of Missing Funds
                         </span>
                       )}
+                      {fileData.invoiceUpload !== null && (
+                        <span style={{ margin: "none" }} className="pdf-label">
+                          <GrAttachment />
+                          <a
+                            style={{ marginLeft: "5px" }}
+                            href="www.google.com"
+                          >
+                            {fileData.invoiceUpload}
+                          </a>
+                        </span>
+                      )}
                     </div>
                   </>
                 ) : (
@@ -589,11 +600,14 @@ const FileInformation = () => {
                           In Pursuit of Missing Funds
                         </span>
                       )}
-                      {missingFundsSwitch && (
+                      {fileData.invoiceUpload !== "" && (
                         <span style={{ margin: "none" }} className="pdf-label">
                           <GrAttachment />
-                          <a href="www.google.com">
-                            Amanada barnes invoice.pdf
+                          <a
+                            style={{ marginLeft: "5px" }}
+                            href="www.google.com"
+                          >
+                            {fileData.invoiceUpload}
                           </a>
                         </span>
                       )}

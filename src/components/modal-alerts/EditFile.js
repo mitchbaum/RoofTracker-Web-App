@@ -7,6 +7,7 @@ import { dropIn } from "../modal/DropIn";
 import "../modal/Modal.css";
 import { UserAuth } from "../../context/AuthContext";
 import { db } from "../../firebase";
+import { FaTimes } from "react-icons/fa";
 import Compressor from "compressorjs";
 import {
   setDoc,
@@ -21,7 +22,12 @@ import {
   deleteField,
 } from "firebase/firestore";
 import { storage } from "../../firebase";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import {
+  ref,
+  uploadBytes,
+  getDownloadURL,
+  deleteObject,
+} from "firebase/storage";
 import moment from "moment"; // reference how to use moment https://momentjs.com/
 import AreYouSure from "../modal-alerts/AreYouSure";
 
@@ -53,7 +59,8 @@ const EditFile = ({
   const [cocSwitch, setCocSwitch] = useState(data.cocSwitch ?? "");
   const [showAlert, setShowAlert] = useState(false);
   const [action, setAction] = useState("");
-  const [pdf, setPdf] = useState("No file chosen");
+  const [pdfData, setPdfData] = useState("");
+  const [pdfTitle, setPdfTitle] = useState(data.invoiceUpload ?? null);
 
   // This function will be triggered when the file field change and compress
   const imageChange = (e) => {
@@ -71,8 +78,8 @@ const EditFile = ({
 
   const pdfChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
-      console.log(e.target.files);
-      setPdf(e.target.files[0].name);
+      setPdfData(e.target.files[0]);
+      setPdfTitle(e.target.files[0].name);
     }
   };
 
@@ -170,6 +177,8 @@ const EditFile = ({
       }
     }
 
+    await uploadPdf(fileId);
+
     await updateDoc(doc(db, `Users/${uid}/Files/${fileId}`), {
       timeStamp: getFromattedDate,
       modified: serverTimestamp(),
@@ -228,7 +237,7 @@ const EditFile = ({
   };
 
   const uploadImage = async (fileId) => {
-    if (imageData == "") {
+    if (imageData === "") {
       console.log("saving file with no image selected");
       return;
     }
@@ -242,6 +251,46 @@ const EditFile = ({
       });
       return;
     });
+  };
+
+  const uploadPdf = async (fileId) => {
+    // handle deleting a pdf
+    if (pdfData === "" && !pdfTitle) {
+      // try removing pdf from storage
+      await removePdf(fileId);
+      console.log("saving file with no pdf selected");
+      return;
+    }
+    // handle replacing a pdf
+    if (pdfTitle !== data.invoiceUpload) {
+      // remove previous pdf
+      await removePdf(fileId);
+      // replace with new pdf
+    }
+
+    const pdfRef = ref(storage, `${uid}/Invoices/${pdfData.name}`);
+    await uploadBytes(pdfRef, pdfData).then((snapshot) => {
+      // run this function when upload is complete
+      updateDoc(doc(db, `Users/${uid}/Files`, fileId), {
+        invoiceUpload: pdfData.name,
+      });
+      console.log(pdfData);
+      console.log(pdfData.name);
+      return;
+    });
+  };
+
+  const removePdf = async (fileId) => {
+    const pdfRef = ref(storage, `${uid}/Invoices/${data.invoiceUpload}`);
+    await deleteObject(pdfRef)
+      .then(() => {
+        updateDoc(doc(db, `Users/${uid}/Files`, fileId), {
+          invoiceUpload: null,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -423,7 +472,25 @@ const EditFile = ({
                   onChange={pdfChange}
                   accept="application/pdf,application/vnd.ms-excel"
                 />
-                <p className="FI-message">{pdf}</p>
+                <div className="FI-message">
+                  {pdfTitle == null ? (
+                    "No invoice uploaded"
+                  ) : (
+                    <>
+                      <div style={{ display: "flex" }}>
+                        {pdfTitle}{" "}
+                        <FaTimes
+                          className="btn-animation center delete"
+                          style={{ marginLeft: "10px" }}
+                          onClick={() => {
+                            setPdfTitle(null);
+                            setPdfData("");
+                          }}
+                        />
+                      </div>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
 
