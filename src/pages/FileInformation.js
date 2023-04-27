@@ -587,20 +587,21 @@ const FileInformation = () => {
                           In Pursuit of Missing Funds
                         </span>
                       )}
-                      {fileData.invoiceUpload !== null && (
-                        <span style={{ margin: "none" }} className="link">
-                          <GrAttachment />
-                          <span
-                            style={{ marginLeft: "5px" }}
-                            className="link"
-                            onClick={() => {
-                              openPdf();
-                            }}
-                          >
-                            {fileData.invoiceUpload}
+                      {fileData.invoiceUpload !== null &&
+                        fileData.invoiceUpload && (
+                          <span style={{ margin: "none" }}>
+                            <GrAttachment />
+                            <span
+                              style={{ marginLeft: "5px" }}
+                              className="link"
+                              onClick={() => {
+                                openPdf();
+                              }}
+                            >
+                              {fileData.invoiceUpload}
+                            </span>
                           </span>
-                        </span>
-                      )}
+                        )}
                     </div>
                   </>
                 ) : (
@@ -612,20 +613,21 @@ const FileInformation = () => {
                           In Pursuit of Missing Funds
                         </span>
                       )}
-                      {fileData.invoiceUpload !== null && (
-                        <span style={{ margin: "none" }} className="link">
-                          <GrAttachment />
-                          <span
-                            style={{ marginLeft: "5px" }}
-                            className="link"
-                            onClick={() => {
-                              openPdf();
-                            }}
-                          >
-                            {fileData.invoiceUpload}
+                      {fileData.invoiceUpload !== null &&
+                        fileData.invoiceUpload && (
+                          <span style={{ margin: "none" }}>
+                            <GrAttachment />
+                            <span
+                              style={{ marginLeft: "5px" }}
+                              className="link"
+                              onClick={() => {
+                                openPdf();
+                              }}
+                            >
+                              {fileData.invoiceUpload}
+                            </span>
                           </span>
-                        </span>
-                      )}
+                        )}
                     </div>
                   </>
                 )}
