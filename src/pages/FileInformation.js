@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { FaCopy } from "react-icons/fa";
+import { GrAttachment } from "react-icons/gr";
 import { BsPrinterFill } from "react-icons/bs";
 import { useParams } from "react-router-dom";
 import { FaTimes } from "react-icons/fa";
@@ -587,6 +587,14 @@ const FileInformation = () => {
                       {missingFundsSwitch && (
                         <span style={{ margin: "none" }} className="flag-label">
                           In Pursuit of Missing Funds
+                        </span>
+                      )}
+                      {missingFundsSwitch && (
+                        <span style={{ margin: "none" }} className="pdf-label">
+                          <GrAttachment />
+                          <a href="www.google.com">
+                            Amanada barnes invoice.pdf
+                          </a>
                         </span>
                       )}
                     </div>
