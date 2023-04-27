@@ -210,7 +210,9 @@ const FileInformation = () => {
   const openPdf = () => {
     const pdfRef = ref(storage, `${uid}/Invoices/${fileData.invoiceUpload}`);
     getDownloadURL(pdfRef).then((url) => {
-      window.open().location = url;
+      setTimeout(() => {
+        window.open(url, "_blank");
+      });
     });
   };
 
